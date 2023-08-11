@@ -4,10 +4,14 @@ pub mod mesh_capnp;
 #[path = "mesh_generated.rs"]
 #[allow(unused_imports)]
 pub mod mesh_fb;
+
 #[cfg(feature = "prost")]
 pub mod mesh_prost {
     include!(concat!(env!("OUT_DIR"), "/prost.mesh.rs"));
 }
+
+#[cfg(feature = "protokit")]
+pub mod pk;
 
 #[cfg(feature = "flatbuffers")]
 use flatbuffers::{FlatBufferBuilder, WIPOffset};
@@ -27,31 +31,32 @@ use crate::bench_capnp;
 use crate::bench_flatbuffers;
 #[cfg(feature = "prost")]
 use crate::bench_prost;
+#[cfg(feature = "protokit")]
+use crate::bench_protokit;
 use crate::Generate;
 
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Clone, Copy)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
-#[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
+#[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
 #[cfg_attr(
-    feature = "borsh",
-    derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+feature = "borsh",
+derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
-#[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
-    feature = "rkyv",
-    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+feature = "rkyv",
+derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(
-    feature = "scale",
-    derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
+feature = "scale",
+derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(
-    feature = "simd-json",
-    derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
+feature = "simd-json",
+derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
@@ -108,16 +113,20 @@ impl bench_prost::Serialize for Vector3 {
     }
 }
 
-#[cfg(feature = "prost")]
-impl From<mesh_prost::Vector3> for Vector3 {
-    fn from(value: mesh_prost::Vector3) -> Self {
-        Vector3 {
-            x: value.x,
-            y: value.y,
-            z: value.z,
-        }
+#[cfg(feature = "protokit")]
+impl bench_protokit::Serialize for Vector3 {
+    type Message = pk::prost::mesh::mesh::Vector3;
+
+    #[inline]
+    fn serialize_pb(&self) -> Self::Message {
+        let mut result = Self::Message::default();
+        result.x = self.x;
+        result.y = self.y;
+        result.z = self.z;
+        result
     }
 }
+
 
 #[cfg(feature = "alkahest")]
 impl alkahest::Pack<Vector3> for Vector3 {
@@ -128,33 +137,31 @@ impl alkahest::Pack<Vector3> for Vector3 {
             y: self.y,
             z: self.z,
         }
-        .pack(offset, output)
+            .pack(offset, output)
     }
 }
 
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Clone, Copy)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
-#[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
-    feature = "borsh",
-    derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+feature = "borsh",
+derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
-#[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
-    feature = "rkyv",
-    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+feature = "rkyv",
+derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(
-    feature = "scale",
-    derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
+feature = "scale",
+derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(
-    feature = "simd-json",
-    derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
+feature = "simd-json",
+derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "alkahest", derive(alkahest::Schema))]
@@ -221,15 +228,18 @@ impl bench_prost::Serialize for Triangle {
     }
 }
 
-#[cfg(feature = "prost")]
-impl From<mesh_prost::Triangle> for Triangle {
-    fn from(value: mesh_prost::Triangle) -> Self {
-        Triangle {
-            v0: value.v0.unwrap().into(),
-            v1: value.v1.unwrap().into(),
-            v2: value.v2.unwrap().into(),
-            normal: value.normal.unwrap().into(),
-        }
+#[cfg(feature = "protokit")]
+impl bench_protokit::Serialize for Triangle {
+    type Message = pk::prost::mesh::mesh::Triangle;
+
+    #[inline]
+    fn serialize_pb(&self) -> Self::Message {
+        let mut result = Self::Message::default();
+        result.v0 = Some(self.v0.serialize_pb().into());
+        result.v1 = Some(self.v1.serialize_pb().into());
+        result.v2 = Some(self.v2.serialize_pb().into());
+        result.normal = Some(self.normal.serialize_pb().into());
+        result
     }
 }
 
@@ -243,33 +253,31 @@ impl alkahest::Pack<Triangle> for &'_ Triangle {
             v2: self.v2,
             normal: self.normal,
         }
-        .pack(offset, output)
+            .pack(offset, output)
     }
 }
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
-#[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
-    feature = "borsh",
-    derive(borsh::BorshSerialize, borsh::BorshDeserialize)
+feature = "borsh",
+derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
-#[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
-    feature = "rkyv",
-    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+feature = "rkyv",
+derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
 #[cfg_attr(feature = "rkyv", archive_attr(derive(bytecheck::CheckBytes)))]
 #[cfg_attr(
-    feature = "scale",
-    derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
+feature = "scale",
+derive(parity_scale_codec_derive::Encode, parity_scale_codec_derive::Decode)
 )]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(
-    feature = "simd-json",
-    derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
+feature = "simd-json",
+derive(simd_json_derive::Serialize, simd_json_derive::Deserialize)
 )]
 #[cfg_attr(feature = "speedy", derive(speedy::Readable, speedy::Writable))]
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
@@ -295,8 +303,8 @@ impl<'a> bench_flatbuffers::Serialize<'a> for Mesh {
 
     #[inline]
     fn serialize_fb<'b>(&self, fbb: &'b mut FlatBufferBuilder<'a>) -> WIPOffset<Self::Target>
-    where
-        'a: 'b,
+        where
+            'a: 'b,
     {
         fbb.start_vector::<fb::Triangle>(self.triangles.len());
         for triangle in self.triangles.iter().cloned() {
@@ -340,12 +348,17 @@ impl bench_prost::Serialize for Mesh {
     }
 }
 
-#[cfg(feature = "prost")]
-impl From<mesh_prost::Mesh> for Mesh {
-    fn from(value: mesh_prost::Mesh) -> Self {
-        Mesh {
-            triangles: value.triangles.into_iter().map(Into::into).collect(),
+#[cfg(feature = "protokit")]
+impl bench_protokit::Serialize for Mesh {
+    type Message = pk::prost::mesh::mesh::Mesh;
+
+    #[inline]
+    fn serialize_pb(&self) -> Self::Message {
+        let mut result = Self::Message::default();
+        for triangle in self.triangles.iter() {
+            result.triangles.push(triangle.serialize_pb());
         }
+        result
     }
 }
 
@@ -362,6 +375,6 @@ impl alkahest::Pack<MeshSchema> for &'_ Mesh {
         MeshSchemaPack {
             triangles: self.triangles.iter(),
         }
-        .pack(offset, output)
+            .pack(offset, output)
     }
 }

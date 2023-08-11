@@ -72,8 +72,10 @@ impl core::fmt::Debug for GameType {
 impl<'a> flatbuffers::Follow<'a> for GameType {
   type Inner = Self;
   #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+  fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe {
+      flatbuffers::read_scalar_at::<i8>(buf, loc)
+    };
     Self(b)
   }
 }
@@ -81,21 +83,21 @@ impl<'a> flatbuffers::Follow<'a> for GameType {
 impl flatbuffers::Push for GameType {
     type Output = GameType;
     #[inline]
-    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    fn push(&self, dst: &mut [u8], _rest: &[u8]) {
+        unsafe { flatbuffers::emplace_scalar::<i8>(dst, self.0); }
     }
 }
 
 impl flatbuffers::EndianScalar for GameType {
-  type Scalar = i8;
   #[inline]
-  fn to_little_endian(self) -> i8 {
-    self.0.to_le()
+  fn to_little_endian(self) -> Self {
+    let b = i8::to_le(self.0);
+    Self(b)
   }
   #[inline]
   #[allow(clippy::wrong_self_convention)]
-  fn from_little_endian(v: i8) -> Self {
-    let b = i8::from_le(v);
+  fn from_little_endian(self) -> Self {
+    let b = i8::from_le(self.0);
     Self(b)
   }
 }
@@ -135,25 +137,39 @@ impl core::fmt::Debug for Abilities {
 }
 
 impl flatbuffers::SimpleToVerifyInSlice for Abilities {}
+impl flatbuffers::SafeSliceAccess for Abilities {}
 impl<'a> flatbuffers::Follow<'a> for Abilities {
   type Inner = &'a Abilities;
   #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+  fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
     <&'a Abilities>::follow(buf, loc)
   }
 }
 impl<'a> flatbuffers::Follow<'a> for &'a Abilities {
   type Inner = &'a Abilities;
   #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+  fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
     flatbuffers::follow_cast_ref::<Abilities>(buf, loc)
   }
 }
 impl<'b> flatbuffers::Push for Abilities {
     type Output = Abilities;
     #[inline]
-    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        let src = ::core::slice::from_raw_parts(self as *const Abilities as *const u8, Self::size());
+    fn push(&self, dst: &mut [u8], _rest: &[u8]) {
+        let src = unsafe {
+            ::core::slice::from_raw_parts(self as *const Abilities as *const u8, Self::size())
+        };
+        dst.copy_from_slice(src);
+    }
+}
+impl<'b> flatbuffers::Push for &'b Abilities {
+    type Output = Abilities;
+
+    #[inline]
+    fn push(&self, dst: &mut [u8], _rest: &[u8]) {
+        let src = unsafe {
+            ::core::slice::from_raw_parts(*self as *const Abilities as *const u8, Self::size())
+        };
         dst.copy_from_slice(src);
     }
 }
@@ -191,204 +207,162 @@ impl<'a> Abilities {
   }
 
   pub fn walk_speed(&self) -> f32 {
-    let mut mem = core::mem::MaybeUninit::<<f32 as EndianScalar>::Scalar>::uninit();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
-    EndianScalar::from_little_endian(unsafe {
+    let mut mem = core::mem::MaybeUninit::<f32>::uninit();
+    unsafe {
       core::ptr::copy_nonoverlapping(
         self.0[0..].as_ptr(),
         mem.as_mut_ptr() as *mut u8,
-        core::mem::size_of::<<f32 as EndianScalar>::Scalar>(),
+        core::mem::size_of::<f32>(),
       );
       mem.assume_init()
-    })
+    }.from_little_endian()
   }
 
   pub fn set_walk_speed(&mut self, x: f32) {
     let x_le = x.to_little_endian();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
     unsafe {
       core::ptr::copy_nonoverlapping(
-        &x_le as *const _ as *const u8,
+        &x_le as *const f32 as *const u8,
         self.0[0..].as_mut_ptr(),
-        core::mem::size_of::<<f32 as EndianScalar>::Scalar>(),
+        core::mem::size_of::<f32>(),
       );
     }
   }
 
   pub fn fly_speed(&self) -> f32 {
-    let mut mem = core::mem::MaybeUninit::<<f32 as EndianScalar>::Scalar>::uninit();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
-    EndianScalar::from_little_endian(unsafe {
+    let mut mem = core::mem::MaybeUninit::<f32>::uninit();
+    unsafe {
       core::ptr::copy_nonoverlapping(
         self.0[4..].as_ptr(),
         mem.as_mut_ptr() as *mut u8,
-        core::mem::size_of::<<f32 as EndianScalar>::Scalar>(),
+        core::mem::size_of::<f32>(),
       );
       mem.assume_init()
-    })
+    }.from_little_endian()
   }
 
   pub fn set_fly_speed(&mut self, x: f32) {
     let x_le = x.to_little_endian();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
     unsafe {
       core::ptr::copy_nonoverlapping(
-        &x_le as *const _ as *const u8,
+        &x_le as *const f32 as *const u8,
         self.0[4..].as_mut_ptr(),
-        core::mem::size_of::<<f32 as EndianScalar>::Scalar>(),
+        core::mem::size_of::<f32>(),
       );
     }
   }
 
   pub fn may_fly(&self) -> bool {
-    let mut mem = core::mem::MaybeUninit::<<bool as EndianScalar>::Scalar>::uninit();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
-    EndianScalar::from_little_endian(unsafe {
+    let mut mem = core::mem::MaybeUninit::<bool>::uninit();
+    unsafe {
       core::ptr::copy_nonoverlapping(
         self.0[8..].as_ptr(),
         mem.as_mut_ptr() as *mut u8,
-        core::mem::size_of::<<bool as EndianScalar>::Scalar>(),
+        core::mem::size_of::<bool>(),
       );
       mem.assume_init()
-    })
+    }.from_little_endian()
   }
 
   pub fn set_may_fly(&mut self, x: bool) {
     let x_le = x.to_little_endian();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
     unsafe {
       core::ptr::copy_nonoverlapping(
-        &x_le as *const _ as *const u8,
+        &x_le as *const bool as *const u8,
         self.0[8..].as_mut_ptr(),
-        core::mem::size_of::<<bool as EndianScalar>::Scalar>(),
+        core::mem::size_of::<bool>(),
       );
     }
   }
 
   pub fn flying(&self) -> bool {
-    let mut mem = core::mem::MaybeUninit::<<bool as EndianScalar>::Scalar>::uninit();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
-    EndianScalar::from_little_endian(unsafe {
+    let mut mem = core::mem::MaybeUninit::<bool>::uninit();
+    unsafe {
       core::ptr::copy_nonoverlapping(
         self.0[9..].as_ptr(),
         mem.as_mut_ptr() as *mut u8,
-        core::mem::size_of::<<bool as EndianScalar>::Scalar>(),
+        core::mem::size_of::<bool>(),
       );
       mem.assume_init()
-    })
+    }.from_little_endian()
   }
 
   pub fn set_flying(&mut self, x: bool) {
     let x_le = x.to_little_endian();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
     unsafe {
       core::ptr::copy_nonoverlapping(
-        &x_le as *const _ as *const u8,
+        &x_le as *const bool as *const u8,
         self.0[9..].as_mut_ptr(),
-        core::mem::size_of::<<bool as EndianScalar>::Scalar>(),
+        core::mem::size_of::<bool>(),
       );
     }
   }
 
   pub fn invulnerable(&self) -> bool {
-    let mut mem = core::mem::MaybeUninit::<<bool as EndianScalar>::Scalar>::uninit();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
-    EndianScalar::from_little_endian(unsafe {
+    let mut mem = core::mem::MaybeUninit::<bool>::uninit();
+    unsafe {
       core::ptr::copy_nonoverlapping(
         self.0[10..].as_ptr(),
         mem.as_mut_ptr() as *mut u8,
-        core::mem::size_of::<<bool as EndianScalar>::Scalar>(),
+        core::mem::size_of::<bool>(),
       );
       mem.assume_init()
-    })
+    }.from_little_endian()
   }
 
   pub fn set_invulnerable(&mut self, x: bool) {
     let x_le = x.to_little_endian();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
     unsafe {
       core::ptr::copy_nonoverlapping(
-        &x_le as *const _ as *const u8,
+        &x_le as *const bool as *const u8,
         self.0[10..].as_mut_ptr(),
-        core::mem::size_of::<<bool as EndianScalar>::Scalar>(),
+        core::mem::size_of::<bool>(),
       );
     }
   }
 
   pub fn may_build(&self) -> bool {
-    let mut mem = core::mem::MaybeUninit::<<bool as EndianScalar>::Scalar>::uninit();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
-    EndianScalar::from_little_endian(unsafe {
+    let mut mem = core::mem::MaybeUninit::<bool>::uninit();
+    unsafe {
       core::ptr::copy_nonoverlapping(
         self.0[11..].as_ptr(),
         mem.as_mut_ptr() as *mut u8,
-        core::mem::size_of::<<bool as EndianScalar>::Scalar>(),
+        core::mem::size_of::<bool>(),
       );
       mem.assume_init()
-    })
+    }.from_little_endian()
   }
 
   pub fn set_may_build(&mut self, x: bool) {
     let x_le = x.to_little_endian();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
     unsafe {
       core::ptr::copy_nonoverlapping(
-        &x_le as *const _ as *const u8,
+        &x_le as *const bool as *const u8,
         self.0[11..].as_mut_ptr(),
-        core::mem::size_of::<<bool as EndianScalar>::Scalar>(),
+        core::mem::size_of::<bool>(),
       );
     }
   }
 
   pub fn instabuild(&self) -> bool {
-    let mut mem = core::mem::MaybeUninit::<<bool as EndianScalar>::Scalar>::uninit();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
-    EndianScalar::from_little_endian(unsafe {
+    let mut mem = core::mem::MaybeUninit::<bool>::uninit();
+    unsafe {
       core::ptr::copy_nonoverlapping(
         self.0[12..].as_ptr(),
         mem.as_mut_ptr() as *mut u8,
-        core::mem::size_of::<<bool as EndianScalar>::Scalar>(),
+        core::mem::size_of::<bool>(),
       );
       mem.assume_init()
-    })
+    }.from_little_endian()
   }
 
   pub fn set_instabuild(&mut self, x: bool) {
     let x_le = x.to_little_endian();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
     unsafe {
       core::ptr::copy_nonoverlapping(
-        &x_le as *const _ as *const u8,
+        &x_le as *const bool as *const u8,
         self.0[12..].as_mut_ptr(),
-        core::mem::size_of::<<bool as EndianScalar>::Scalar>(),
+        core::mem::size_of::<bool>(),
       );
     }
   }
@@ -414,25 +388,39 @@ impl core::fmt::Debug for Vector2f {
 }
 
 impl flatbuffers::SimpleToVerifyInSlice for Vector2f {}
+impl flatbuffers::SafeSliceAccess for Vector2f {}
 impl<'a> flatbuffers::Follow<'a> for Vector2f {
   type Inner = &'a Vector2f;
   #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+  fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
     <&'a Vector2f>::follow(buf, loc)
   }
 }
 impl<'a> flatbuffers::Follow<'a> for &'a Vector2f {
   type Inner = &'a Vector2f;
   #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+  fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
     flatbuffers::follow_cast_ref::<Vector2f>(buf, loc)
   }
 }
 impl<'b> flatbuffers::Push for Vector2f {
     type Output = Vector2f;
     #[inline]
-    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        let src = ::core::slice::from_raw_parts(self as *const Vector2f as *const u8, Self::size());
+    fn push(&self, dst: &mut [u8], _rest: &[u8]) {
+        let src = unsafe {
+            ::core::slice::from_raw_parts(self as *const Vector2f as *const u8, Self::size())
+        };
+        dst.copy_from_slice(src);
+    }
+}
+impl<'b> flatbuffers::Push for &'b Vector2f {
+    type Output = Vector2f;
+
+    #[inline]
+    fn push(&self, dst: &mut [u8], _rest: &[u8]) {
+        let src = unsafe {
+            ::core::slice::from_raw_parts(*self as *const Vector2f as *const u8, Self::size())
+        };
         dst.copy_from_slice(src);
     }
 }
@@ -460,59 +448,47 @@ impl<'a> Vector2f {
   }
 
   pub fn x(&self) -> f32 {
-    let mut mem = core::mem::MaybeUninit::<<f32 as EndianScalar>::Scalar>::uninit();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
-    EndianScalar::from_little_endian(unsafe {
+    let mut mem = core::mem::MaybeUninit::<f32>::uninit();
+    unsafe {
       core::ptr::copy_nonoverlapping(
         self.0[0..].as_ptr(),
         mem.as_mut_ptr() as *mut u8,
-        core::mem::size_of::<<f32 as EndianScalar>::Scalar>(),
+        core::mem::size_of::<f32>(),
       );
       mem.assume_init()
-    })
+    }.from_little_endian()
   }
 
   pub fn set_x(&mut self, x: f32) {
     let x_le = x.to_little_endian();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
     unsafe {
       core::ptr::copy_nonoverlapping(
-        &x_le as *const _ as *const u8,
+        &x_le as *const f32 as *const u8,
         self.0[0..].as_mut_ptr(),
-        core::mem::size_of::<<f32 as EndianScalar>::Scalar>(),
+        core::mem::size_of::<f32>(),
       );
     }
   }
 
   pub fn y(&self) -> f32 {
-    let mut mem = core::mem::MaybeUninit::<<f32 as EndianScalar>::Scalar>::uninit();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
-    EndianScalar::from_little_endian(unsafe {
+    let mut mem = core::mem::MaybeUninit::<f32>::uninit();
+    unsafe {
       core::ptr::copy_nonoverlapping(
         self.0[4..].as_ptr(),
         mem.as_mut_ptr() as *mut u8,
-        core::mem::size_of::<<f32 as EndianScalar>::Scalar>(),
+        core::mem::size_of::<f32>(),
       );
       mem.assume_init()
-    })
+    }.from_little_endian()
   }
 
   pub fn set_y(&mut self, x: f32) {
     let x_le = x.to_little_endian();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
     unsafe {
       core::ptr::copy_nonoverlapping(
-        &x_le as *const _ as *const u8,
+        &x_le as *const f32 as *const u8,
         self.0[4..].as_mut_ptr(),
-        core::mem::size_of::<<f32 as EndianScalar>::Scalar>(),
+        core::mem::size_of::<f32>(),
       );
     }
   }
@@ -539,25 +515,39 @@ impl core::fmt::Debug for Vector3d {
 }
 
 impl flatbuffers::SimpleToVerifyInSlice for Vector3d {}
+impl flatbuffers::SafeSliceAccess for Vector3d {}
 impl<'a> flatbuffers::Follow<'a> for Vector3d {
   type Inner = &'a Vector3d;
   #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+  fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
     <&'a Vector3d>::follow(buf, loc)
   }
 }
 impl<'a> flatbuffers::Follow<'a> for &'a Vector3d {
   type Inner = &'a Vector3d;
   #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+  fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
     flatbuffers::follow_cast_ref::<Vector3d>(buf, loc)
   }
 }
 impl<'b> flatbuffers::Push for Vector3d {
     type Output = Vector3d;
     #[inline]
-    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        let src = ::core::slice::from_raw_parts(self as *const Vector3d as *const u8, Self::size());
+    fn push(&self, dst: &mut [u8], _rest: &[u8]) {
+        let src = unsafe {
+            ::core::slice::from_raw_parts(self as *const Vector3d as *const u8, Self::size())
+        };
+        dst.copy_from_slice(src);
+    }
+}
+impl<'b> flatbuffers::Push for &'b Vector3d {
+    type Output = Vector3d;
+
+    #[inline]
+    fn push(&self, dst: &mut [u8], _rest: &[u8]) {
+        let src = unsafe {
+            ::core::slice::from_raw_parts(*self as *const Vector3d as *const u8, Self::size())
+        };
         dst.copy_from_slice(src);
     }
 }
@@ -587,88 +577,70 @@ impl<'a> Vector3d {
   }
 
   pub fn x(&self) -> f64 {
-    let mut mem = core::mem::MaybeUninit::<<f64 as EndianScalar>::Scalar>::uninit();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
-    EndianScalar::from_little_endian(unsafe {
+    let mut mem = core::mem::MaybeUninit::<f64>::uninit();
+    unsafe {
       core::ptr::copy_nonoverlapping(
         self.0[0..].as_ptr(),
         mem.as_mut_ptr() as *mut u8,
-        core::mem::size_of::<<f64 as EndianScalar>::Scalar>(),
+        core::mem::size_of::<f64>(),
       );
       mem.assume_init()
-    })
+    }.from_little_endian()
   }
 
   pub fn set_x(&mut self, x: f64) {
     let x_le = x.to_little_endian();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
     unsafe {
       core::ptr::copy_nonoverlapping(
-        &x_le as *const _ as *const u8,
+        &x_le as *const f64 as *const u8,
         self.0[0..].as_mut_ptr(),
-        core::mem::size_of::<<f64 as EndianScalar>::Scalar>(),
+        core::mem::size_of::<f64>(),
       );
     }
   }
 
   pub fn y(&self) -> f64 {
-    let mut mem = core::mem::MaybeUninit::<<f64 as EndianScalar>::Scalar>::uninit();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
-    EndianScalar::from_little_endian(unsafe {
+    let mut mem = core::mem::MaybeUninit::<f64>::uninit();
+    unsafe {
       core::ptr::copy_nonoverlapping(
         self.0[8..].as_ptr(),
         mem.as_mut_ptr() as *mut u8,
-        core::mem::size_of::<<f64 as EndianScalar>::Scalar>(),
+        core::mem::size_of::<f64>(),
       );
       mem.assume_init()
-    })
+    }.from_little_endian()
   }
 
   pub fn set_y(&mut self, x: f64) {
     let x_le = x.to_little_endian();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
     unsafe {
       core::ptr::copy_nonoverlapping(
-        &x_le as *const _ as *const u8,
+        &x_le as *const f64 as *const u8,
         self.0[8..].as_mut_ptr(),
-        core::mem::size_of::<<f64 as EndianScalar>::Scalar>(),
+        core::mem::size_of::<f64>(),
       );
     }
   }
 
   pub fn z(&self) -> f64 {
-    let mut mem = core::mem::MaybeUninit::<<f64 as EndianScalar>::Scalar>::uninit();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
-    EndianScalar::from_little_endian(unsafe {
+    let mut mem = core::mem::MaybeUninit::<f64>::uninit();
+    unsafe {
       core::ptr::copy_nonoverlapping(
         self.0[16..].as_ptr(),
         mem.as_mut_ptr() as *mut u8,
-        core::mem::size_of::<<f64 as EndianScalar>::Scalar>(),
+        core::mem::size_of::<f64>(),
       );
       mem.assume_init()
-    })
+    }.from_little_endian()
   }
 
   pub fn set_z(&mut self, x: f64) {
     let x_le = x.to_little_endian();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
     unsafe {
       core::ptr::copy_nonoverlapping(
-        &x_le as *const _ as *const u8,
+        &x_le as *const f64 as *const u8,
         self.0[16..].as_mut_ptr(),
-        core::mem::size_of::<<f64 as EndianScalar>::Scalar>(),
+        core::mem::size_of::<f64>(),
       );
     }
   }
@@ -696,25 +668,39 @@ impl core::fmt::Debug for Uuid {
 }
 
 impl flatbuffers::SimpleToVerifyInSlice for Uuid {}
+impl flatbuffers::SafeSliceAccess for Uuid {}
 impl<'a> flatbuffers::Follow<'a> for Uuid {
   type Inner = &'a Uuid;
   #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+  fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
     <&'a Uuid>::follow(buf, loc)
   }
 }
 impl<'a> flatbuffers::Follow<'a> for &'a Uuid {
   type Inner = &'a Uuid;
   #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+  fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
     flatbuffers::follow_cast_ref::<Uuid>(buf, loc)
   }
 }
 impl<'b> flatbuffers::Push for Uuid {
     type Output = Uuid;
     #[inline]
-    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        let src = ::core::slice::from_raw_parts(self as *const Uuid as *const u8, Self::size());
+    fn push(&self, dst: &mut [u8], _rest: &[u8]) {
+        let src = unsafe {
+            ::core::slice::from_raw_parts(self as *const Uuid as *const u8, Self::size())
+        };
+        dst.copy_from_slice(src);
+    }
+}
+impl<'b> flatbuffers::Push for &'b Uuid {
+    type Output = Uuid;
+
+    #[inline]
+    fn push(&self, dst: &mut [u8], _rest: &[u8]) {
+        let src = unsafe {
+            ::core::slice::from_raw_parts(*self as *const Uuid as *const u8, Self::size())
+        };
         dst.copy_from_slice(src);
     }
 }
@@ -746,117 +732,93 @@ impl<'a> Uuid {
   }
 
   pub fn x0(&self) -> u32 {
-    let mut mem = core::mem::MaybeUninit::<<u32 as EndianScalar>::Scalar>::uninit();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
-    EndianScalar::from_little_endian(unsafe {
+    let mut mem = core::mem::MaybeUninit::<u32>::uninit();
+    unsafe {
       core::ptr::copy_nonoverlapping(
         self.0[0..].as_ptr(),
         mem.as_mut_ptr() as *mut u8,
-        core::mem::size_of::<<u32 as EndianScalar>::Scalar>(),
+        core::mem::size_of::<u32>(),
       );
       mem.assume_init()
-    })
+    }.from_little_endian()
   }
 
   pub fn set_x0(&mut self, x: u32) {
     let x_le = x.to_little_endian();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
     unsafe {
       core::ptr::copy_nonoverlapping(
-        &x_le as *const _ as *const u8,
+        &x_le as *const u32 as *const u8,
         self.0[0..].as_mut_ptr(),
-        core::mem::size_of::<<u32 as EndianScalar>::Scalar>(),
+        core::mem::size_of::<u32>(),
       );
     }
   }
 
   pub fn x1(&self) -> u32 {
-    let mut mem = core::mem::MaybeUninit::<<u32 as EndianScalar>::Scalar>::uninit();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
-    EndianScalar::from_little_endian(unsafe {
+    let mut mem = core::mem::MaybeUninit::<u32>::uninit();
+    unsafe {
       core::ptr::copy_nonoverlapping(
         self.0[4..].as_ptr(),
         mem.as_mut_ptr() as *mut u8,
-        core::mem::size_of::<<u32 as EndianScalar>::Scalar>(),
+        core::mem::size_of::<u32>(),
       );
       mem.assume_init()
-    })
+    }.from_little_endian()
   }
 
   pub fn set_x1(&mut self, x: u32) {
     let x_le = x.to_little_endian();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
     unsafe {
       core::ptr::copy_nonoverlapping(
-        &x_le as *const _ as *const u8,
+        &x_le as *const u32 as *const u8,
         self.0[4..].as_mut_ptr(),
-        core::mem::size_of::<<u32 as EndianScalar>::Scalar>(),
+        core::mem::size_of::<u32>(),
       );
     }
   }
 
   pub fn x2(&self) -> u32 {
-    let mut mem = core::mem::MaybeUninit::<<u32 as EndianScalar>::Scalar>::uninit();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
-    EndianScalar::from_little_endian(unsafe {
+    let mut mem = core::mem::MaybeUninit::<u32>::uninit();
+    unsafe {
       core::ptr::copy_nonoverlapping(
         self.0[8..].as_ptr(),
         mem.as_mut_ptr() as *mut u8,
-        core::mem::size_of::<<u32 as EndianScalar>::Scalar>(),
+        core::mem::size_of::<u32>(),
       );
       mem.assume_init()
-    })
+    }.from_little_endian()
   }
 
   pub fn set_x2(&mut self, x: u32) {
     let x_le = x.to_little_endian();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
     unsafe {
       core::ptr::copy_nonoverlapping(
-        &x_le as *const _ as *const u8,
+        &x_le as *const u32 as *const u8,
         self.0[8..].as_mut_ptr(),
-        core::mem::size_of::<<u32 as EndianScalar>::Scalar>(),
+        core::mem::size_of::<u32>(),
       );
     }
   }
 
   pub fn x3(&self) -> u32 {
-    let mut mem = core::mem::MaybeUninit::<<u32 as EndianScalar>::Scalar>::uninit();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
-    EndianScalar::from_little_endian(unsafe {
+    let mut mem = core::mem::MaybeUninit::<u32>::uninit();
+    unsafe {
       core::ptr::copy_nonoverlapping(
         self.0[12..].as_ptr(),
         mem.as_mut_ptr() as *mut u8,
-        core::mem::size_of::<<u32 as EndianScalar>::Scalar>(),
+        core::mem::size_of::<u32>(),
       );
       mem.assume_init()
-    })
+    }.from_little_endian()
   }
 
   pub fn set_x3(&mut self, x: u32) {
     let x_le = x.to_little_endian();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
     unsafe {
       core::ptr::copy_nonoverlapping(
-        &x_le as *const _ as *const u8,
+        &x_le as *const u32 as *const u8,
         self.0[12..].as_mut_ptr(),
-        core::mem::size_of::<<u32 as EndianScalar>::Scalar>(),
+        core::mem::size_of::<u32>(),
       );
     }
   }
@@ -873,8 +835,8 @@ pub struct Item<'a> {
 impl<'a> flatbuffers::Follow<'a> for Item<'a> {
   type Inner = Item<'a>;
   #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table { buf, loc } }
   }
 }
 
@@ -884,7 +846,7 @@ impl<'a> Item<'a> {
   pub const VT_ID: flatbuffers::VOffsetT = 8;
 
   #[inline]
-  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+  pub fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
     Item { _tab: table }
   }
   #[allow(unused_mut)]
@@ -902,24 +864,15 @@ impl<'a> Item<'a> {
 
   #[inline]
   pub fn count(&self) -> i8 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i8>(Item::VT_COUNT, Some(0)).unwrap()}
+    self._tab.get::<i8>(Item::VT_COUNT, Some(0)).unwrap()
   }
   #[inline]
   pub fn slot(&self) -> u8 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<u8>(Item::VT_SLOT, Some(0)).unwrap()}
+    self._tab.get::<u8>(Item::VT_SLOT, Some(0)).unwrap()
   }
   #[inline]
   pub fn id(&self) -> &'a str {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Item::VT_ID, None).unwrap()}
+    self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Item::VT_ID, None).unwrap()
   }
 }
 
@@ -1005,8 +958,8 @@ pub struct Entity<'a> {
 impl<'a> flatbuffers::Follow<'a> for Entity<'a> {
   type Inner = Entity<'a>;
   #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table { buf, loc } }
   }
 }
 
@@ -1029,7 +982,7 @@ impl<'a> Entity<'a> {
   pub const VT_GLOWING: flatbuffers::VOffsetT = 34;
 
   #[inline]
-  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+  pub fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
     Entity { _tab: table }
   }
   #[allow(unused_mut)]
@@ -1060,115 +1013,67 @@ impl<'a> Entity<'a> {
 
   #[inline]
   pub fn id(&self) -> &'a str {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Entity::VT_ID, None).unwrap()}
+    self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Entity::VT_ID, None).unwrap()
   }
   #[inline]
   pub fn pos(&self) -> &'a Vector3d {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<Vector3d>(Entity::VT_POS, None).unwrap()}
+    self._tab.get::<Vector3d>(Entity::VT_POS, None).unwrap()
   }
   #[inline]
   pub fn motion(&self) -> &'a Vector3d {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<Vector3d>(Entity::VT_MOTION, None).unwrap()}
+    self._tab.get::<Vector3d>(Entity::VT_MOTION, None).unwrap()
   }
   #[inline]
   pub fn rotation(&self) -> &'a Vector2f {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<Vector2f>(Entity::VT_ROTATION, None).unwrap()}
+    self._tab.get::<Vector2f>(Entity::VT_ROTATION, None).unwrap()
   }
   #[inline]
   pub fn fall_distance(&self) -> f32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f32>(Entity::VT_FALL_DISTANCE, Some(0.0)).unwrap()}
+    self._tab.get::<f32>(Entity::VT_FALL_DISTANCE, Some(0.0)).unwrap()
   }
   #[inline]
   pub fn fire(&self) -> u16 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<u16>(Entity::VT_FIRE, Some(0)).unwrap()}
+    self._tab.get::<u16>(Entity::VT_FIRE, Some(0)).unwrap()
   }
   #[inline]
   pub fn air(&self) -> u16 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<u16>(Entity::VT_AIR, Some(0)).unwrap()}
+    self._tab.get::<u16>(Entity::VT_AIR, Some(0)).unwrap()
   }
   #[inline]
   pub fn on_ground(&self) -> bool {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(Entity::VT_ON_GROUND, Some(false)).unwrap()}
+    self._tab.get::<bool>(Entity::VT_ON_GROUND, Some(false)).unwrap()
   }
   #[inline]
   pub fn no_gravity(&self) -> bool {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(Entity::VT_NO_GRAVITY, Some(false)).unwrap()}
+    self._tab.get::<bool>(Entity::VT_NO_GRAVITY, Some(false)).unwrap()
   }
   #[inline]
   pub fn invulnerable(&self) -> bool {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(Entity::VT_INVULNERABLE, Some(false)).unwrap()}
+    self._tab.get::<bool>(Entity::VT_INVULNERABLE, Some(false)).unwrap()
   }
   #[inline]
   pub fn portal_cooldown(&self) -> i32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(Entity::VT_PORTAL_COOLDOWN, Some(0)).unwrap()}
+    self._tab.get::<i32>(Entity::VT_PORTAL_COOLDOWN, Some(0)).unwrap()
   }
   #[inline]
   pub fn uuid(&self) -> &'a Uuid {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<Uuid>(Entity::VT_UUID, None).unwrap()}
+    self._tab.get::<Uuid>(Entity::VT_UUID, None).unwrap()
   }
   #[inline]
   pub fn custom_name(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Entity::VT_CUSTOM_NAME, None)}
+    self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Entity::VT_CUSTOM_NAME, None)
   }
   #[inline]
   pub fn custom_name_visible(&self) -> bool {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(Entity::VT_CUSTOM_NAME_VISIBLE, Some(false)).unwrap()}
+    self._tab.get::<bool>(Entity::VT_CUSTOM_NAME_VISIBLE, Some(false)).unwrap()
   }
   #[inline]
   pub fn silent(&self) -> bool {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(Entity::VT_SILENT, Some(false)).unwrap()}
+    self._tab.get::<bool>(Entity::VT_SILENT, Some(false)).unwrap()
   }
   #[inline]
   pub fn glowing(&self) -> bool {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(Entity::VT_GLOWING, Some(false)).unwrap()}
+    self._tab.get::<bool>(Entity::VT_GLOWING, Some(false)).unwrap()
   }
 }
 
@@ -1362,8 +1267,8 @@ pub struct RecipeBook<'a> {
 impl<'a> flatbuffers::Follow<'a> for RecipeBook<'a> {
   type Inner = RecipeBook<'a>;
   #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table { buf, loc } }
   }
 }
 
@@ -1380,7 +1285,7 @@ impl<'a> RecipeBook<'a> {
   pub const VT_IS_SMOKER_GUI_OPEN: flatbuffers::VOffsetT = 22;
 
   #[inline]
-  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+  pub fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
     RecipeBook { _tab: table }
   }
   #[allow(unused_mut)]
@@ -1405,73 +1310,43 @@ impl<'a> RecipeBook<'a> {
 
   #[inline]
   pub fn recipes(&self) -> flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(RecipeBook::VT_RECIPES, None).unwrap()}
+    self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(RecipeBook::VT_RECIPES, None).unwrap()
   }
   #[inline]
   pub fn to_be_displayed(&self) -> flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(RecipeBook::VT_TO_BE_DISPLAYED, None).unwrap()}
+    self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(RecipeBook::VT_TO_BE_DISPLAYED, None).unwrap()
   }
   #[inline]
   pub fn is_filtering_craftable(&self) -> bool {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(RecipeBook::VT_IS_FILTERING_CRAFTABLE, Some(false)).unwrap()}
+    self._tab.get::<bool>(RecipeBook::VT_IS_FILTERING_CRAFTABLE, Some(false)).unwrap()
   }
   #[inline]
   pub fn is_gui_open(&self) -> bool {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(RecipeBook::VT_IS_GUI_OPEN, Some(false)).unwrap()}
+    self._tab.get::<bool>(RecipeBook::VT_IS_GUI_OPEN, Some(false)).unwrap()
   }
   #[inline]
   pub fn is_furnace_filtering_craftable(&self) -> bool {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(RecipeBook::VT_IS_FURNACE_FILTERING_CRAFTABLE, Some(false)).unwrap()}
+    self._tab.get::<bool>(RecipeBook::VT_IS_FURNACE_FILTERING_CRAFTABLE, Some(false)).unwrap()
   }
   #[inline]
   pub fn is_furnace_gui_open(&self) -> bool {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(RecipeBook::VT_IS_FURNACE_GUI_OPEN, Some(false)).unwrap()}
+    self._tab.get::<bool>(RecipeBook::VT_IS_FURNACE_GUI_OPEN, Some(false)).unwrap()
   }
   #[inline]
   pub fn is_blasting_furnace_filtering_craftable(&self) -> bool {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(RecipeBook::VT_IS_BLASTING_FURNACE_FILTERING_CRAFTABLE, Some(false)).unwrap()}
+    self._tab.get::<bool>(RecipeBook::VT_IS_BLASTING_FURNACE_FILTERING_CRAFTABLE, Some(false)).unwrap()
   }
   #[inline]
   pub fn is_blasting_furnace_gui_open(&self) -> bool {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(RecipeBook::VT_IS_BLASTING_FURNACE_GUI_OPEN, Some(false)).unwrap()}
+    self._tab.get::<bool>(RecipeBook::VT_IS_BLASTING_FURNACE_GUI_OPEN, Some(false)).unwrap()
   }
   #[inline]
   pub fn is_smoker_filtering_craftable(&self) -> bool {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(RecipeBook::VT_IS_SMOKER_FILTERING_CRAFTABLE, Some(false)).unwrap()}
+    self._tab.get::<bool>(RecipeBook::VT_IS_SMOKER_FILTERING_CRAFTABLE, Some(false)).unwrap()
   }
   #[inline]
   pub fn is_smoker_gui_open(&self) -> bool {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(RecipeBook::VT_IS_SMOKER_GUI_OPEN, Some(false)).unwrap()}
+    self._tab.get::<bool>(RecipeBook::VT_IS_SMOKER_GUI_OPEN, Some(false)).unwrap()
   }
 }
 
@@ -1614,8 +1489,8 @@ pub struct Vehicle<'a> {
 impl<'a> flatbuffers::Follow<'a> for Vehicle<'a> {
   type Inner = Vehicle<'a>;
   #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table { buf, loc } }
   }
 }
 
@@ -1627,7 +1502,7 @@ impl<'a> Vehicle<'a> {
   pub const VT_ENTITY: flatbuffers::VOffsetT = 12;
 
   #[inline]
-  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+  pub fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
     Vehicle { _tab: table }
   }
   #[allow(unused_mut)]
@@ -1647,38 +1522,23 @@ impl<'a> Vehicle<'a> {
 
   #[inline]
   pub fn param_0(&self) -> u32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<u32>(Vehicle::VT_PARAM_0, Some(0)).unwrap()}
+    self._tab.get::<u32>(Vehicle::VT_PARAM_0, Some(0)).unwrap()
   }
   #[inline]
   pub fn param_1(&self) -> u32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<u32>(Vehicle::VT_PARAM_1, Some(0)).unwrap()}
+    self._tab.get::<u32>(Vehicle::VT_PARAM_1, Some(0)).unwrap()
   }
   #[inline]
   pub fn param_2(&self) -> u32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<u32>(Vehicle::VT_PARAM_2, Some(0)).unwrap()}
+    self._tab.get::<u32>(Vehicle::VT_PARAM_2, Some(0)).unwrap()
   }
   #[inline]
   pub fn param_3(&self) -> u32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<u32>(Vehicle::VT_PARAM_3, Some(0)).unwrap()}
+    self._tab.get::<u32>(Vehicle::VT_PARAM_3, Some(0)).unwrap()
   }
   #[inline]
   pub fn entity(&self) -> Entity<'a> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<Entity>>(Vehicle::VT_ENTITY, None).unwrap()}
+    self._tab.get::<flatbuffers::ForwardsUOffset<Entity>>(Vehicle::VT_ENTITY, None).unwrap()
   }
 }
 
@@ -1780,8 +1640,8 @@ pub struct Player<'a> {
 impl<'a> flatbuffers::Follow<'a> for Player<'a> {
   type Inner = Player<'a>;
   #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table { buf, loc } }
   }
 }
 
@@ -1816,7 +1676,7 @@ impl<'a> Player<'a> {
   pub const VT_RECIPE_BOOK: flatbuffers::VOffsetT = 58;
 
   #[inline]
-  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+  pub fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
     Player { _tab: table }
   }
   #[allow(unused_mut)]
@@ -1859,199 +1719,115 @@ impl<'a> Player<'a> {
 
   #[inline]
   pub fn game_type(&self) -> GameType {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<GameType>(Player::VT_GAME_TYPE, Some(GameType::Survival)).unwrap()}
+    self._tab.get::<GameType>(Player::VT_GAME_TYPE, Some(GameType::Survival)).unwrap()
   }
   #[inline]
   pub fn previous_game_type(&self) -> GameType {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<GameType>(Player::VT_PREVIOUS_GAME_TYPE, Some(GameType::Survival)).unwrap()}
+    self._tab.get::<GameType>(Player::VT_PREVIOUS_GAME_TYPE, Some(GameType::Survival)).unwrap()
   }
   #[inline]
   pub fn score(&self) -> i64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i64>(Player::VT_SCORE, Some(0)).unwrap()}
+    self._tab.get::<i64>(Player::VT_SCORE, Some(0)).unwrap()
   }
   #[inline]
   pub fn dimension(&self) -> &'a str {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Player::VT_DIMENSION, None).unwrap()}
+    self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Player::VT_DIMENSION, None).unwrap()
   }
   #[inline]
   pub fn selected_item_slot(&self) -> u32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<u32>(Player::VT_SELECTED_ITEM_SLOT, Some(0)).unwrap()}
+    self._tab.get::<u32>(Player::VT_SELECTED_ITEM_SLOT, Some(0)).unwrap()
   }
   #[inline]
   pub fn selected_item(&self) -> Item<'a> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<Item>>(Player::VT_SELECTED_ITEM, None).unwrap()}
+    self._tab.get::<flatbuffers::ForwardsUOffset<Item>>(Player::VT_SELECTED_ITEM, None).unwrap()
   }
   #[inline]
   pub fn spawn_dimension(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Player::VT_SPAWN_DIMENSION, None)}
+    self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Player::VT_SPAWN_DIMENSION, None)
   }
   #[inline]
   pub fn spawn_x(&self) -> i64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i64>(Player::VT_SPAWN_X, Some(0)).unwrap()}
+    self._tab.get::<i64>(Player::VT_SPAWN_X, Some(0)).unwrap()
   }
   #[inline]
   pub fn spawn_y(&self) -> i64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i64>(Player::VT_SPAWN_Y, Some(0)).unwrap()}
+    self._tab.get::<i64>(Player::VT_SPAWN_Y, Some(0)).unwrap()
   }
   #[inline]
   pub fn spawn_z(&self) -> i64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i64>(Player::VT_SPAWN_Z, Some(0)).unwrap()}
+    self._tab.get::<i64>(Player::VT_SPAWN_Z, Some(0)).unwrap()
   }
   #[inline]
   pub fn spawn_forced(&self) -> bool {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(Player::VT_SPAWN_FORCED, Some(false)).unwrap()}
+    self._tab.get::<bool>(Player::VT_SPAWN_FORCED, Some(false)).unwrap()
   }
   #[inline]
   pub fn sleep_timer(&self) -> u16 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<u16>(Player::VT_SLEEP_TIMER, Some(0)).unwrap()}
+    self._tab.get::<u16>(Player::VT_SLEEP_TIMER, Some(0)).unwrap()
   }
   #[inline]
   pub fn food_exhaustion_level(&self) -> f32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f32>(Player::VT_FOOD_EXHAUSTION_LEVEL, Some(0.0)).unwrap()}
+    self._tab.get::<f32>(Player::VT_FOOD_EXHAUSTION_LEVEL, Some(0.0)).unwrap()
   }
   #[inline]
   pub fn food_saturation_level(&self) -> f32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f32>(Player::VT_FOOD_SATURATION_LEVEL, Some(0.0)).unwrap()}
+    self._tab.get::<f32>(Player::VT_FOOD_SATURATION_LEVEL, Some(0.0)).unwrap()
   }
   #[inline]
   pub fn food_tick_timer(&self) -> u32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<u32>(Player::VT_FOOD_TICK_TIMER, Some(0)).unwrap()}
+    self._tab.get::<u32>(Player::VT_FOOD_TICK_TIMER, Some(0)).unwrap()
   }
   #[inline]
   pub fn xp_level(&self) -> u32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<u32>(Player::VT_XP_LEVEL, Some(0)).unwrap()}
+    self._tab.get::<u32>(Player::VT_XP_LEVEL, Some(0)).unwrap()
   }
   #[inline]
   pub fn xp_p(&self) -> f32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f32>(Player::VT_XP_P, Some(0.0)).unwrap()}
+    self._tab.get::<f32>(Player::VT_XP_P, Some(0.0)).unwrap()
   }
   #[inline]
   pub fn xp_total(&self) -> i32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(Player::VT_XP_TOTAL, Some(0)).unwrap()}
+    self._tab.get::<i32>(Player::VT_XP_TOTAL, Some(0)).unwrap()
   }
   #[inline]
   pub fn xp_seed(&self) -> i32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(Player::VT_XP_SEED, Some(0)).unwrap()}
+    self._tab.get::<i32>(Player::VT_XP_SEED, Some(0)).unwrap()
   }
   #[inline]
   pub fn inventory(&self) -> flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Item<'a>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Item>>>>(Player::VT_INVENTORY, None).unwrap()}
+    self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Item>>>>(Player::VT_INVENTORY, None).unwrap()
   }
   #[inline]
   pub fn ender_items(&self) -> flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Item<'a>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Item>>>>(Player::VT_ENDER_ITEMS, None).unwrap()}
+    self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Item>>>>(Player::VT_ENDER_ITEMS, None).unwrap()
   }
   #[inline]
   pub fn abilities(&self) -> &'a Abilities {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<Abilities>(Player::VT_ABILITIES, None).unwrap()}
+    self._tab.get::<Abilities>(Player::VT_ABILITIES, None).unwrap()
   }
   #[inline]
   pub fn entered_nether_position(&self) -> Option<&'a Vector3d> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<Vector3d>(Player::VT_ENTERED_NETHER_POSITION, None)}
+    self._tab.get::<Vector3d>(Player::VT_ENTERED_NETHER_POSITION, None)
   }
   #[inline]
   pub fn root_vehicle(&self) -> Option<Vehicle<'a>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<Vehicle>>(Player::VT_ROOT_VEHICLE, None)}
+    self._tab.get::<flatbuffers::ForwardsUOffset<Vehicle>>(Player::VT_ROOT_VEHICLE, None)
   }
   #[inline]
   pub fn shoulder_entity_left(&self) -> Option<Entity<'a>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<Entity>>(Player::VT_SHOULDER_ENTITY_LEFT, None)}
+    self._tab.get::<flatbuffers::ForwardsUOffset<Entity>>(Player::VT_SHOULDER_ENTITY_LEFT, None)
   }
   #[inline]
   pub fn shoulder_entity_right(&self) -> Option<Entity<'a>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<Entity>>(Player::VT_SHOULDER_ENTITY_RIGHT, None)}
+    self._tab.get::<flatbuffers::ForwardsUOffset<Entity>>(Player::VT_SHOULDER_ENTITY_RIGHT, None)
   }
   #[inline]
   pub fn seen_credits(&self) -> bool {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(Player::VT_SEEN_CREDITS, Some(false)).unwrap()}
+    self._tab.get::<bool>(Player::VT_SEEN_CREDITS, Some(false)).unwrap()
   }
   #[inline]
   pub fn recipe_book(&self) -> RecipeBook<'a> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<RecipeBook>>(Player::VT_RECIPE_BOOK, None).unwrap()}
+    self._tab.get::<flatbuffers::ForwardsUOffset<RecipeBook>>(Player::VT_RECIPE_BOOK, None).unwrap()
   }
 }
 
@@ -2342,8 +2118,8 @@ pub struct Players<'a> {
 impl<'a> flatbuffers::Follow<'a> for Players<'a> {
   type Inner = Players<'a>;
   #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table { buf, loc } }
   }
 }
 
@@ -2351,7 +2127,7 @@ impl<'a> Players<'a> {
   pub const VT_PLAYERS: flatbuffers::VOffsetT = 4;
 
   #[inline]
-  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+  pub fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
     Players { _tab: table }
   }
   #[allow(unused_mut)]
@@ -2367,10 +2143,7 @@ impl<'a> Players<'a> {
 
   #[inline]
   pub fn players(&self) -> flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Player<'a>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Player>>>>(Players::VT_PLAYERS, None).unwrap()}
+    self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Player>>>>(Players::VT_PLAYERS, None).unwrap()
   }
 }
 

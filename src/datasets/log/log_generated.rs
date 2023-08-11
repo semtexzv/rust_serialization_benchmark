@@ -39,25 +39,39 @@ impl core::fmt::Debug for Address {
 }
 
 impl flatbuffers::SimpleToVerifyInSlice for Address {}
+impl flatbuffers::SafeSliceAccess for Address {}
 impl<'a> flatbuffers::Follow<'a> for Address {
   type Inner = &'a Address;
   #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+  fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
     <&'a Address>::follow(buf, loc)
   }
 }
 impl<'a> flatbuffers::Follow<'a> for &'a Address {
   type Inner = &'a Address;
   #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+  fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
     flatbuffers::follow_cast_ref::<Address>(buf, loc)
   }
 }
 impl<'b> flatbuffers::Push for Address {
     type Output = Address;
     #[inline]
-    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        let src = ::core::slice::from_raw_parts(self as *const Address as *const u8, Self::size());
+    fn push(&self, dst: &mut [u8], _rest: &[u8]) {
+        let src = unsafe {
+            ::core::slice::from_raw_parts(self as *const Address as *const u8, Self::size())
+        };
+        dst.copy_from_slice(src);
+    }
+}
+impl<'b> flatbuffers::Push for &'b Address {
+    type Output = Address;
+
+    #[inline]
+    fn push(&self, dst: &mut [u8], _rest: &[u8]) {
+        let src = unsafe {
+            ::core::slice::from_raw_parts(*self as *const Address as *const u8, Self::size())
+        };
         dst.copy_from_slice(src);
     }
 }
@@ -89,117 +103,93 @@ impl<'a> Address {
   }
 
   pub fn x0(&self) -> u8 {
-    let mut mem = core::mem::MaybeUninit::<<u8 as EndianScalar>::Scalar>::uninit();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
-    EndianScalar::from_little_endian(unsafe {
+    let mut mem = core::mem::MaybeUninit::<u8>::uninit();
+    unsafe {
       core::ptr::copy_nonoverlapping(
         self.0[0..].as_ptr(),
         mem.as_mut_ptr() as *mut u8,
-        core::mem::size_of::<<u8 as EndianScalar>::Scalar>(),
+        core::mem::size_of::<u8>(),
       );
       mem.assume_init()
-    })
+    }.from_little_endian()
   }
 
   pub fn set_x0(&mut self, x: u8) {
     let x_le = x.to_little_endian();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
     unsafe {
       core::ptr::copy_nonoverlapping(
-        &x_le as *const _ as *const u8,
+        &x_le as *const u8 as *const u8,
         self.0[0..].as_mut_ptr(),
-        core::mem::size_of::<<u8 as EndianScalar>::Scalar>(),
+        core::mem::size_of::<u8>(),
       );
     }
   }
 
   pub fn x1(&self) -> u8 {
-    let mut mem = core::mem::MaybeUninit::<<u8 as EndianScalar>::Scalar>::uninit();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
-    EndianScalar::from_little_endian(unsafe {
+    let mut mem = core::mem::MaybeUninit::<u8>::uninit();
+    unsafe {
       core::ptr::copy_nonoverlapping(
         self.0[1..].as_ptr(),
         mem.as_mut_ptr() as *mut u8,
-        core::mem::size_of::<<u8 as EndianScalar>::Scalar>(),
+        core::mem::size_of::<u8>(),
       );
       mem.assume_init()
-    })
+    }.from_little_endian()
   }
 
   pub fn set_x1(&mut self, x: u8) {
     let x_le = x.to_little_endian();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
     unsafe {
       core::ptr::copy_nonoverlapping(
-        &x_le as *const _ as *const u8,
+        &x_le as *const u8 as *const u8,
         self.0[1..].as_mut_ptr(),
-        core::mem::size_of::<<u8 as EndianScalar>::Scalar>(),
+        core::mem::size_of::<u8>(),
       );
     }
   }
 
   pub fn x2(&self) -> u8 {
-    let mut mem = core::mem::MaybeUninit::<<u8 as EndianScalar>::Scalar>::uninit();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
-    EndianScalar::from_little_endian(unsafe {
+    let mut mem = core::mem::MaybeUninit::<u8>::uninit();
+    unsafe {
       core::ptr::copy_nonoverlapping(
         self.0[2..].as_ptr(),
         mem.as_mut_ptr() as *mut u8,
-        core::mem::size_of::<<u8 as EndianScalar>::Scalar>(),
+        core::mem::size_of::<u8>(),
       );
       mem.assume_init()
-    })
+    }.from_little_endian()
   }
 
   pub fn set_x2(&mut self, x: u8) {
     let x_le = x.to_little_endian();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
     unsafe {
       core::ptr::copy_nonoverlapping(
-        &x_le as *const _ as *const u8,
+        &x_le as *const u8 as *const u8,
         self.0[2..].as_mut_ptr(),
-        core::mem::size_of::<<u8 as EndianScalar>::Scalar>(),
+        core::mem::size_of::<u8>(),
       );
     }
   }
 
   pub fn x3(&self) -> u8 {
-    let mut mem = core::mem::MaybeUninit::<<u8 as EndianScalar>::Scalar>::uninit();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
-    EndianScalar::from_little_endian(unsafe {
+    let mut mem = core::mem::MaybeUninit::<u8>::uninit();
+    unsafe {
       core::ptr::copy_nonoverlapping(
         self.0[3..].as_ptr(),
         mem.as_mut_ptr() as *mut u8,
-        core::mem::size_of::<<u8 as EndianScalar>::Scalar>(),
+        core::mem::size_of::<u8>(),
       );
       mem.assume_init()
-    })
+    }.from_little_endian()
   }
 
   pub fn set_x3(&mut self, x: u8) {
     let x_le = x.to_little_endian();
-    // Safety:
-    // Created from a valid Table for this object
-    // Which contains a valid value in this slot
     unsafe {
       core::ptr::copy_nonoverlapping(
-        &x_le as *const _ as *const u8,
+        &x_le as *const u8 as *const u8,
         self.0[3..].as_mut_ptr(),
-        core::mem::size_of::<<u8 as EndianScalar>::Scalar>(),
+        core::mem::size_of::<u8>(),
       );
     }
   }
@@ -216,8 +206,8 @@ pub struct Log<'a> {
 impl<'a> flatbuffers::Follow<'a> for Log<'a> {
   type Inner = Log<'a>;
   #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table { buf, loc } }
   }
 }
 
@@ -231,7 +221,7 @@ impl<'a> Log<'a> {
   pub const VT_SIZE_: flatbuffers::VOffsetT = 16;
 
   #[inline]
-  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+  pub fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
     Log { _tab: table }
   }
   #[allow(unused_mut)]
@@ -253,52 +243,31 @@ impl<'a> Log<'a> {
 
   #[inline]
   pub fn address(&self) -> Option<&'a Address> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<Address>(Log::VT_ADDRESS, None)}
+    self._tab.get::<Address>(Log::VT_ADDRESS, None)
   }
   #[inline]
   pub fn identity(&self) -> &'a str {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Log::VT_IDENTITY, None).unwrap()}
+    self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Log::VT_IDENTITY, None).unwrap()
   }
   #[inline]
   pub fn userid(&self) -> &'a str {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Log::VT_USERID, None).unwrap()}
+    self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Log::VT_USERID, None).unwrap()
   }
   #[inline]
   pub fn date(&self) -> &'a str {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Log::VT_DATE, None).unwrap()}
+    self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Log::VT_DATE, None).unwrap()
   }
   #[inline]
   pub fn request(&self) -> &'a str {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Log::VT_REQUEST, None).unwrap()}
+    self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Log::VT_REQUEST, None).unwrap()
   }
   #[inline]
   pub fn code(&self) -> u16 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<u16>(Log::VT_CODE, Some(0)).unwrap()}
+    self._tab.get::<u16>(Log::VT_CODE, Some(0)).unwrap()
   }
   #[inline]
   pub fn size_(&self) -> u64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<u64>(Log::VT_SIZE_, Some(0)).unwrap()}
+    self._tab.get::<u64>(Log::VT_SIZE_, Some(0)).unwrap()
   }
 }
 
@@ -419,8 +388,8 @@ pub struct Logs<'a> {
 impl<'a> flatbuffers::Follow<'a> for Logs<'a> {
   type Inner = Logs<'a>;
   #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table { buf, loc } }
   }
 }
 
@@ -428,7 +397,7 @@ impl<'a> Logs<'a> {
   pub const VT_LOGS: flatbuffers::VOffsetT = 4;
 
   #[inline]
-  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+  pub fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
     Logs { _tab: table }
   }
   #[allow(unused_mut)]
@@ -444,10 +413,7 @@ impl<'a> Logs<'a> {
 
   #[inline]
   pub fn logs(&self) -> flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Log<'a>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Log>>>>(Logs::VT_LOGS, None).unwrap()}
+    self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Log>>>>(Logs::VT_LOGS, None).unwrap()
   }
 }
 

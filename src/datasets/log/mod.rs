@@ -10,7 +10,8 @@ pub mod log_fb;
 pub mod log_prost {
     include!(concat!(env!("OUT_DIR"), "/prost.log.rs"));
 }
-
+#[cfg(feature = "protokit")]
+pub mod pk;
 #[cfg(feature = "flatbuffers")]
 use flatbuffers::{FlatBufferBuilder, WIPOffset};
 #[cfg(feature = "capnp")]
@@ -29,17 +30,17 @@ use crate::bench_capnp;
 use crate::bench_flatbuffers;
 #[cfg(feature = "prost")]
 use crate::bench_prost;
+#[cfg(feature = "protokit")]
+use crate::bench_protokit;
 use crate::Generate;
 
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Clone, Copy)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
-#[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
     feature = "borsh",
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
-#[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
     feature = "rkyv",
@@ -114,15 +115,18 @@ impl bench_prost::Serialize for Address {
     }
 }
 
-#[cfg(feature = "prost")]
-impl From<log_prost::Address> for Address {
-    fn from(value: log_prost::Address) -> Self {
-        Address {
-            x0: value.x0.try_into().unwrap(),
-            x1: value.x1.try_into().unwrap(),
-            x2: value.x2.try_into().unwrap(),
-            x3: value.x3.try_into().unwrap(),
-        }
+#[cfg(feature = "protokit")]
+impl bench_protokit::Serialize for Address {
+    type Message = pk::prost::log::log::Address;
+
+    #[inline]
+    fn serialize_pb(&self) -> Self::Message {
+        let mut result = Self::Message::default();
+        result.x0 = self.x0 as u32;
+        result.x1 = self.x1 as u32;
+        result.x2 = self.x2 as u32;
+        result.x3 = self.x3 as u32;
+        result
     }
 }
 
@@ -140,15 +144,13 @@ impl alkahest::Pack<Address> for Address {
     }
 }
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
-#[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
     feature = "borsh",
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
-#[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
     feature = "rkyv",
@@ -173,7 +175,9 @@ pub struct Log {
     pub userid: String,
     pub date: String,
     pub request: String,
+    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "100..599"))]
     pub code: u16,
+    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0..100000000"))]
     pub size: u64,
 }
 
@@ -301,14 +305,12 @@ impl<'a> bench_capnp::Serialize<'a> for Log {
 
     #[inline]
     fn serialize_capnp(&self, builder: &mut Self::Builder) {
-        use capnp::text::Reader;
-
         self.address
             .serialize_capnp(&mut builder.reborrow().init_address());
-        builder.set_identity(Reader(self.identity.as_bytes()));
-        builder.set_userid(Reader(self.userid.as_bytes()));
-        builder.set_date(Reader(self.date.as_bytes()));
-        builder.set_request(Reader(self.request.as_bytes()));
+        builder.set_identity(&self.identity);
+        builder.set_userid(&self.userid);
+        builder.set_date(&self.date);
+        builder.set_request(&self.request);
         builder.set_code(self.code);
         builder.set_size(self.size);
     }
@@ -320,30 +322,31 @@ impl bench_prost::Serialize for Log {
 
     #[inline]
     fn serialize_pb(&self) -> Self::Message {
-        log_prost::Log {
-            address: Some(self.address.serialize_pb()),
-            identity: self.identity.clone(),
-            userid: self.userid.clone(),
-            date: self.date.clone(),
-            request: self.request.clone(),
-            code: self.code as u32,
-            size: self.size,
-        }
+        let mut result = Self::Message::default();
+        result.identity = self.identity.clone();
+        result.userid = self.userid.clone();
+        result.date = self.date.clone();
+        result.request = self.request.clone();
+        result.code = self.code as u32;
+        result.size = self.size;
+        result
     }
 }
 
-#[cfg(feature = "prost")]
-impl From<log_prost::Log> for Log {
-    fn from(value: log_prost::Log) -> Self {
-        Log {
-            address: value.address.unwrap().into(),
-            identity: value.identity,
-            userid: value.userid,
-            date: value.date,
-            request: value.request,
-            code: value.code.try_into().unwrap(),
-            size: value.size,
-        }
+#[cfg(feature = "protokit")]
+impl bench_protokit::Serialize for Log {
+    type Message = pk::prost::log::log::Log;
+
+    #[inline]
+    fn serialize_pb(&self) -> Self::Message {
+        let mut result = Self::Message::default();
+        result.identity = self.identity.clone();
+        result.userid = self.userid.clone();
+        result.date = self.date.clone();
+        result.request = self.request.clone();
+        result.code = self.code as u32;
+        result.size = self.size;
+        result
     }
 }
 
@@ -364,15 +367,13 @@ impl alkahest::Pack<LogSchema> for &'_ Log {
     }
 }
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
-#[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
     feature = "borsh",
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
-#[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
     feature = "rkyv",
@@ -455,12 +456,17 @@ impl bench_prost::Serialize for Logs {
     }
 }
 
-#[cfg(feature = "prost")]
-impl From<log_prost::Logs> for Logs {
-    fn from(value: log_prost::Logs) -> Self {
-        Logs {
-            logs: value.logs.into_iter().map(Into::into).collect(),
+#[cfg(feature = "protokit")]
+impl bench_protokit::Serialize for Logs {
+    type Message = pk::prost::log::log::Logs;
+
+    #[inline]
+    fn serialize_pb(&self) -> Self::Message {
+        let mut result = Self::Message::default();
+        for log in self.logs.iter() {
+            result.logs.push(log.serialize_pb());
         }
+        result
     }
 }
 

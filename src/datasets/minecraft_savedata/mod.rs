@@ -9,6 +9,8 @@ pub mod minecraft_savedata_prost {
     include!(concat!(env!("OUT_DIR"), "/prost.minecraft_savedata.rs"));
 }
 
+#[cfg(feature = "protokit")]
+pub mod pk;
 #[cfg(feature = "flatbuffers")]
 use flatbuffers::{FlatBufferBuilder, WIPOffset};
 #[cfg(feature = "capnp")]
@@ -29,17 +31,17 @@ use crate::bench_capnp;
 use crate::bench_flatbuffers;
 #[cfg(feature = "prost")]
 use crate::bench_prost;
+#[cfg(feature = "protokit")]
+use crate::bench_protokit;
 use crate::{generate_vec, Generate};
 
-#[derive(Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
-#[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
     feature = "borsh",
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
-#[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
     feature = "rkyv",
@@ -118,18 +120,6 @@ impl Into<pb::GameType> for GameType {
     }
 }
 
-#[cfg(feature = "prost")]
-impl From<pb::GameType> for GameType {
-    fn from(value: pb::GameType) -> Self {
-        match value {
-            pb::GameType::Survival => GameType::Survival,
-            pb::GameType::Creative => GameType::Creative,
-            pb::GameType::Adventure => GameType::Adventure,
-            pb::GameType::Spectator => GameType::Spectator,
-        }
-    }
-}
-
 #[cfg(feature = "alkahest")]
 impl alkahest::Pack<GameType> for GameType {
     #[inline]
@@ -143,15 +133,13 @@ impl alkahest::Pack<GameType> for GameType {
     }
 }
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
-#[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
     feature = "borsh",
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
-#[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
     feature = "rkyv",
@@ -222,11 +210,9 @@ impl<'a> bench_capnp::Serialize<'a> for Item {
 
     #[inline]
     fn serialize_capnp(&self, builder: &mut Self::Builder) {
-        use capnp::text::Reader;
-
         builder.set_count(self.count);
         builder.set_slot(self.slot);
-        builder.set_id(Reader(self.id.as_bytes()));
+        builder.set_id(&self.id);
     }
 }
 
@@ -241,17 +227,6 @@ impl bench_prost::Serialize for Item {
         result.slot = self.slot as u32;
         result.id = self.id.clone();
         result
-    }
-}
-
-#[cfg(feature = "prost")]
-impl From<pb::Item> for Item {
-    fn from(value: pb::Item) -> Self {
-        Item {
-            count: value.count.try_into().unwrap(),
-            slot: value.slot.try_into().unwrap(),
-            id: value.id,
-        }
     }
 }
 
@@ -276,15 +251,13 @@ impl alkahest::Pack<ItemSchema> for &'_ Item {
     }
 }
 
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Clone, Copy)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
-#[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
     feature = "borsh",
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
-#[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
     feature = "rkyv",
@@ -305,7 +278,9 @@ impl alkahest::Pack<ItemSchema> for &'_ Item {
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 pub struct Abilities {
+    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
     pub walk_speed: f32,
+    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
     pub fly_speed: f32,
     pub may_fly: bool,
     pub flying: bool,
@@ -379,21 +354,6 @@ impl bench_prost::Serialize for Abilities {
     }
 }
 
-#[cfg(feature = "prost")]
-impl From<pb::Abilities> for Abilities {
-    fn from(value: pb::Abilities) -> Self {
-        Abilities {
-            walk_speed: value.walk_speed,
-            fly_speed: value.fly_speed,
-            may_fly: value.may_fly,
-            flying: value.flying,
-            invulnerable: value.invulnerable,
-            may_build: value.may_build,
-            instabuild: value.instabuild,
-        }
-    }
-}
-
 #[cfg(feature = "alkahest")]
 impl alkahest::Pack<Abilities> for Abilities {
     #[inline]
@@ -411,15 +371,13 @@ impl alkahest::Pack<Abilities> for Abilities {
     }
 }
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
-#[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
     feature = "borsh",
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
-#[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
     feature = "rkyv",
@@ -440,9 +398,13 @@ impl alkahest::Pack<Abilities> for Abilities {
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 pub struct Entity {
     pub id: String,
+    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
     pub pos: (f64, f64, f64),
+    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
     pub motion: (f64, f64, f64),
+    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
     pub rotation: (f32, f32),
+    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
     pub fall_distance: f32,
     pub fire: u16,
     pub air: u16,
@@ -538,9 +500,7 @@ impl<'a> bench_capnp::Serialize<'a> for Entity {
 
     #[inline]
     fn serialize_capnp(&self, builder: &mut Self::Builder) {
-        use capnp::text::Reader;
-
-        builder.set_id(Reader(self.id.as_bytes()));
+        builder.set_id(&self.id);
         let mut pos = builder.reborrow().init_pos();
         pos.set_x(self.pos.0);
         pos.set_y(self.pos.1);
@@ -565,7 +525,7 @@ impl<'a> bench_capnp::Serialize<'a> for Entity {
         uuid.set_x2(self.uuid[2]);
         uuid.set_x3(self.uuid[3]);
         if let Some(ref custom_name) = self.custom_name {
-            builder.set_custom_name(Reader(custom_name.as_bytes()));
+            builder.set_custom_name(custom_name);
         }
         builder.set_custom_name_visible(self.custom_name_visible);
         builder.set_silent(self.silent);
@@ -626,51 +586,6 @@ impl bench_prost::Serialize for Entity {
     }
 }
 
-#[cfg(feature = "prost")]
-impl From<pb::Vector3d> for (f64, f64, f64) {
-    fn from(value: pb::Vector3d) -> Self {
-        (value.x, value.y, value.z)
-    }
-}
-
-#[cfg(feature = "prost")]
-impl From<pb::Vector2f> for (f32, f32) {
-    fn from(value: pb::Vector2f) -> Self {
-        (value.x, value.y)
-    }
-}
-
-#[cfg(feature = "prost")]
-impl From<pb::Uuid> for [u32; 4] {
-    fn from(value: pb::Uuid) -> Self {
-        [value.x0, value.x1, value.x2, value.x3]
-    }
-}
-
-#[cfg(feature = "prost")]
-impl From<pb::Entity> for Entity {
-    fn from(value: pb::Entity) -> Self {
-        Entity {
-            id: value.id,
-            pos: value.pos.unwrap().into(),
-            motion: value.motion.unwrap().into(),
-            rotation: value.rotation.unwrap().into(),
-            fall_distance: value.fall_distance,
-            fire: value.fire.try_into().unwrap(),
-            air: value.air.try_into().unwrap(),
-            on_ground: value.on_ground,
-            no_gravity: value.no_gravity,
-            invulnerable: value.invulnerable,
-            portal_cooldown: value.portal_cooldown,
-            uuid: value.uuid.unwrap().into(),
-            custom_name: value.custom_name,
-            custom_name_visible: value.custom_name_visible,
-            silent: value.silent,
-            glowing: value.glowing,
-        }
-    }
-}
-
 #[cfg(feature = "alkahest")]
 #[derive(alkahest::Schema)]
 pub struct EntitySchema {
@@ -718,15 +633,13 @@ impl alkahest::Pack<EntitySchema> for &'_ Entity {
     }
 }
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
-#[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
     feature = "borsh",
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
-#[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
     feature = "rkyv",
@@ -838,17 +751,15 @@ impl<'a> bench_capnp::Serialize<'a> for RecipeBook {
 
     #[inline]
     fn serialize_capnp(&self, builder: &mut Self::Builder) {
-        use capnp::text::Reader;
-
         let mut recipes = builder.reborrow().init_recipes(self.recipes.len() as u32);
         for (i, recipe) in self.recipes.iter().enumerate() {
-            recipes.set(i as u32, Reader(recipe.as_bytes()));
+            recipes.set(i as u32, recipe);
         }
         let mut to_be_displayed = builder
             .reborrow()
             .init_to_be_displayed(self.to_be_displayed.len() as u32);
         for (i, name) in self.to_be_displayed.iter().enumerate() {
-            to_be_displayed.set(i as u32, Reader(name.as_bytes()));
+            to_be_displayed.set(i as u32, name);
         }
         builder.set_is_filtering_craftable(self.is_filtering_craftable);
         builder.set_is_gui_open(self.is_gui_open);
@@ -889,24 +800,6 @@ impl bench_prost::Serialize for RecipeBook {
     }
 }
 
-#[cfg(feature = "prost")]
-impl From<pb::RecipeBook> for RecipeBook {
-    fn from(value: pb::RecipeBook) -> Self {
-        RecipeBook {
-            recipes: value.recipes,
-            to_be_displayed: value.to_be_displayed,
-            is_filtering_craftable: value.is_filtering_craftable,
-            is_gui_open: value.is_gui_open,
-            is_furnace_filtering_craftable: value.is_furnace_filtering_craftable,
-            is_furnace_gui_open: value.is_furnace_gui_open,
-            is_blasting_furnace_filtering_craftable: value.is_blasting_furnace_filtering_craftable,
-            is_blasting_furnace_gui_open: value.is_blasting_furnace_gui_open,
-            is_smoker_filtering_craftable: value.is_smoker_filtering_craftable,
-            is_smoker_gui_open: value.is_smoker_gui_open,
-        }
-    }
-}
-
 #[cfg(feature = "alkahest")]
 #[derive(alkahest::Schema)]
 pub struct RecipeBookSchema {
@@ -942,15 +835,13 @@ impl alkahest::Pack<RecipeBookSchema> for &'_ RecipeBook {
     }
 }
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
-#[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
     feature = "borsh",
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
-#[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
     feature = "rkyv",
@@ -982,16 +873,20 @@ pub struct Player {
     pub spawn_z: i64,
     pub spawn_forced: Option<bool>,
     pub sleep_timer: u16,
+    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
     pub food_exhaustion_level: f32,
+    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
     pub food_saturation_level: f32,
     pub food_tick_timer: u32,
     pub xp_level: u32,
+    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
     pub xp_p: f32,
     pub xp_total: i32,
     pub xp_seed: i32,
     pub inventory: Vec<Item>,
     pub ender_items: Vec<Item>,
     pub abilities: Abilities,
+    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0.0..1.0"))]
     pub entered_nether_position: Option<(f64, f64, f64)>,
     pub root_vehicle: Option<([u32; 4], Entity)>,
     pub shoulder_entity_left: Option<Entity>,
@@ -1162,17 +1057,15 @@ impl<'a> bench_capnp::Serialize<'a> for Player {
     type Builder = cp::player::Builder<'a>;
 
     fn serialize_capnp(&self, builder: &mut Self::Builder) {
-        use capnp::text::Reader;
-
         builder.set_game_type(self.game_type.into());
         builder.set_previous_game_type(self.previous_game_type.into());
         builder.set_score(self.score);
-        builder.set_dimension(Reader(self.dimension.as_bytes()));
+        builder.set_dimension(&self.dimension);
         let mut selected_item = builder.reborrow().init_selected_item();
         self.selected_item.serialize_capnp(&mut selected_item);
         let mut spawn_dimension = builder.reborrow().init_spawn_dimension();
         if let Some(ref value) = self.spawn_dimension {
-            spawn_dimension.set_some(Reader(value.as_bytes()));
+            spawn_dimension.set_some(value);
         } else {
             spawn_dimension.set_none(());
         }
@@ -1312,46 +1205,6 @@ impl bench_prost::Serialize for Player {
     }
 }
 
-#[cfg(feature = "prost")]
-impl From<pb::Player> for Player {
-    fn from(value: pb::Player) -> Self {
-        Player {
-            game_type: pb::GameType::try_from(value.game_type).unwrap().into(),
-            previous_game_type: pb::GameType::try_from(value.previous_game_type)
-                .unwrap()
-                .into(),
-            score: value.score,
-            dimension: value.dimension,
-            selected_item_slot: value.selected_item_slot,
-            selected_item: value.selected_item.unwrap().into(),
-            spawn_dimension: value.spawn_dimension,
-            spawn_x: value.spawn_x,
-            spawn_y: value.spawn_y,
-            spawn_z: value.spawn_z,
-            spawn_forced: value.spawn_forced,
-            sleep_timer: value.sleep_timer.try_into().unwrap(),
-            food_exhaustion_level: value.food_exhaustion_level,
-            food_saturation_level: value.food_saturation_level,
-            food_tick_timer: value.food_tick_timer,
-            xp_level: value.xp_level,
-            xp_p: value.xp_p,
-            xp_total: value.xp_total,
-            xp_seed: value.xp_seed,
-            inventory: value.inventory.into_iter().map(Into::into).collect(),
-            ender_items: value.ender_items.into_iter().map(Into::into).collect(),
-            abilities: value.abilities.unwrap().into(),
-            entered_nether_position: value.entered_nether_position.map(Into::into),
-            root_vehicle: value
-                .root_vehicle
-                .map(|vehicle| (vehicle.uuid.unwrap().into(), vehicle.entity.unwrap().into())),
-            shoulder_entity_left: value.shoulder_entity_left.map(Into::into),
-            shoulder_entity_right: value.shoulder_entity_right.map(Into::into),
-            seen_credits: value.seen_credits,
-            recipe_book: value.recipe_book.unwrap().into(),
-        }
-    }
-}
-
 #[cfg(feature = "alkahest")]
 #[derive(alkahest::Schema)]
 pub struct PlayerSchema {
@@ -1429,15 +1282,13 @@ impl alkahest::Pack<PlayerSchema> for &'_ Player {
     }
 }
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
-#[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
     feature = "borsh",
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
-#[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
     feature = "rkyv",
@@ -1517,15 +1368,6 @@ impl bench_prost::Serialize for Players {
             result.players.push(player.serialize_pb());
         }
         result
-    }
-}
-
-#[cfg(feature = "prost")]
-impl From<pb::Players> for Players {
-    fn from(value: pb::Players) -> Self {
-        Players {
-            players: value.players.into_iter().map(Into::into).collect(),
-        }
     }
 }
 

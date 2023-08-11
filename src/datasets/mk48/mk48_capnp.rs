@@ -17,13 +17,6 @@ pub enum EntityType {
   Yasen = 8,
   Zubr = 9,
 }
-
-impl ::capnp::introspect::Introspect for EntityType {
-  fn introspect() -> ::capnp::introspect::Type { ::capnp::introspect::TypeVariant::Enum(::capnp::introspect::RawEnumSchema { encoded_node: &entity_type::ENCODED_NODE, annotation_types: entity_type::get_annotation_types }).into() }
-}
-impl <'a> ::core::convert::From<EntityType> for ::capnp::dynamic_value::Reader<'a> {
-  fn from(e: EntityType) -> Self { ::capnp::dynamic_value::Enum::new(e.into(), ::capnp::introspect::RawEnumSchema { encoded_node: &entity_type::ENCODED_NODE, annotation_types: entity_type::get_annotation_types }.into()).into() }
-}
 impl ::core::convert::TryFrom<u16> for EntityType {
   type Error = ::capnp::NotInSchema;
   fn try_from(value: u16) -> ::core::result::Result<Self, <EntityType as ::core::convert::TryFrom<u16>>::Error> {
@@ -49,81 +42,10 @@ impl From<EntityType> for u16 {
 impl ::capnp::traits::HasTypeId for EntityType {
   const TYPE_ID: u64 = 0xf3c9_9b45_bfa9_11e6u64;
 }
-mod entity_type {
-pub static ENCODED_NODE: [::capnp::Word; 63] = [
-  ::capnp::word(0, 0, 0, 0, 5, 0, 6, 0),
-  ::capnp::word(230, 17, 169, 191, 69, 155, 201, 243),
-  ::capnp::word(29, 0, 0, 0, 2, 0, 0, 0),
-  ::capnp::word(176, 174, 139, 250, 136, 40, 24, 195),
-  ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-  ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-  ::capnp::word(21, 0, 0, 0, 66, 1, 0, 0),
-  ::capnp::word(37, 0, 0, 0, 7, 0, 0, 0),
-  ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-  ::capnp::word(33, 0, 0, 0, 247, 0, 0, 0),
-  ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-  ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-  ::capnp::word(115, 114, 99, 47, 100, 97, 116, 97),
-  ::capnp::word(115, 101, 116, 115, 47, 109, 107, 52),
-  ::capnp::word(56, 47, 109, 107, 52, 56, 46, 99),
-  ::capnp::word(97, 112, 110, 112, 58, 69, 110, 116),
-  ::capnp::word(105, 116, 121, 84, 121, 112, 101, 0),
-  ::capnp::word(0, 0, 0, 0, 1, 0, 1, 0),
-  ::capnp::word(40, 0, 0, 0, 1, 0, 2, 0),
-  ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-  ::capnp::word(113, 0, 0, 0, 106, 0, 0, 0),
-  ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-  ::capnp::word(1, 0, 0, 0, 0, 0, 0, 0),
-  ::capnp::word(109, 0, 0, 0, 74, 0, 0, 0),
-  ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-  ::capnp::word(2, 0, 0, 0, 0, 0, 0, 0),
-  ::capnp::word(105, 0, 0, 0, 90, 0, 0, 0),
-  ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-  ::capnp::word(3, 0, 0, 0, 0, 0, 0, 0),
-  ::capnp::word(101, 0, 0, 0, 74, 0, 0, 0),
-  ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-  ::capnp::word(4, 0, 0, 0, 0, 0, 0, 0),
-  ::capnp::word(97, 0, 0, 0, 26, 0, 0, 0),
-  ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-  ::capnp::word(5, 0, 0, 0, 0, 0, 0, 0),
-  ::capnp::word(89, 0, 0, 0, 42, 0, 0, 0),
-  ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-  ::capnp::word(6, 0, 0, 0, 0, 0, 0, 0),
-  ::capnp::word(81, 0, 0, 0, 66, 0, 0, 0),
-  ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-  ::capnp::word(7, 0, 0, 0, 0, 0, 0, 0),
-  ::capnp::word(73, 0, 0, 0, 34, 0, 0, 0),
-  ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-  ::capnp::word(8, 0, 0, 0, 0, 0, 0, 0),
-  ::capnp::word(65, 0, 0, 0, 50, 0, 0, 0),
-  ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-  ::capnp::word(9, 0, 0, 0, 0, 0, 0, 0),
-  ::capnp::word(57, 0, 0, 0, 42, 0, 0, 0),
-  ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-  ::capnp::word(97, 114, 108, 101, 105, 103, 104, 66),
-  ::capnp::word(117, 114, 107, 101, 0, 0, 0, 0),
-  ::capnp::word(98, 105, 115, 109, 97, 114, 99, 107),
-  ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-  ::capnp::word(99, 108, 101, 109, 101, 110, 99, 101),
-  ::capnp::word(97, 117, 0, 0, 0, 0, 0, 0),
-  ::capnp::word(102, 108, 101, 116, 99, 104, 101, 114),
-  ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-  ::capnp::word(103, 53, 0, 0, 0, 0, 0, 0),
-  ::capnp::word(105, 111, 119, 97, 0, 0, 0, 0),
-  ::capnp::word(107, 111, 108, 107, 97, 116, 97, 0),
-  ::capnp::word(111, 115, 97, 0, 0, 0, 0, 0),
-  ::capnp::word(121, 97, 115, 101, 110, 0, 0, 0),
-  ::capnp::word(122, 117, 98, 114, 0, 0, 0, 0),
-];
-pub fn get_annotation_types(child_index: Option<u16>, index: u32) -> ::capnp::introspect::Type {
-  panic!("invalid annotation indices ({:?}, {}) ", child_index, index)
-}
-}
 
 pub mod transform {
   #[derive(Copy, Clone)]
   pub struct Owned(());
-  impl ::capnp::introspect::Introspect for Owned { fn introspect() -> ::capnp::introspect::Type { ::capnp::introspect::TypeVariant::Struct(::capnp::introspect::RawBrandedStructSchema { generic: &_private::RAW_SCHEMA, field_types: _private::get_field_types, annotation_types: _private::get_annotation_types }).into() } }
   impl ::capnp::traits::Owned for Owned { type Reader<'a> = Reader<'a>; type Builder<'a> = Builder<'a>; }
   impl ::capnp::traits::OwnedStruct for Owned { type Reader<'a> = Reader<'a>; type Builder<'a> = Builder<'a>; }
   impl ::capnp::traits::Pipelined for Owned { type Pipeline = Pipeline; }
@@ -140,18 +62,6 @@ pub mod transform {
   impl <'a,> ::core::convert::From<::capnp::private::layout::StructReader<'a>> for Reader<'a,>  {
     fn from(reader: ::capnp::private::layout::StructReader<'a>) -> Self {
       Self { reader,  }
-    }
-  }
-
-  impl <'a,> ::core::convert::From<Reader<'a,>> for ::capnp::dynamic_value::Reader<'a>  {
-    fn from(reader: Reader<'a,>) -> Self {
-      Self::Struct(::capnp::dynamic_struct::Reader::new(reader.reader, ::capnp::schema::StructSchema::new(::capnp::introspect::RawBrandedStructSchema { generic: &_private::RAW_SCHEMA, field_types: _private::get_field_types::<>, annotation_types: _private::get_annotation_types::<>})))
-    }
-  }
-
-  impl <'a,> ::core::fmt::Debug for Reader<'a,>  {
-    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::result::Result<(), ::core::fmt::Error> {
-      core::fmt::Debug::fmt(&::core::convert::Into::<::capnp::dynamic_value::Reader<'_>>::into(*self), f)
     }
   }
 
@@ -209,12 +119,6 @@ pub mod transform {
   impl <'a,> ::core::convert::From<::capnp::private::layout::StructBuilder<'a>> for Builder<'a,>  {
     fn from(builder: ::capnp::private::layout::StructBuilder<'a>) -> Self {
       Self { builder,  }
-    }
-  }
-
-  impl <'a,> ::core::convert::From<Builder<'a,>> for ::capnp::dynamic_value::Builder<'a>  {
-    fn from(builder: Builder<'a,>) -> Self {
-      Self::Struct(::capnp::dynamic_struct::Builder::new(builder.builder, ::capnp::schema::StructSchema::new(::capnp::introspect::RawBrandedStructSchema { generic: &_private::RAW_SCHEMA, field_types: _private::get_field_types::<>, annotation_types: _private::get_annotation_types::<>})))
     }
   }
 
@@ -299,109 +203,12 @@ pub mod transform {
     }
   }
   mod _private {
-    pub static ENCODED_NODE: [::capnp::Word; 75] = [
-      ::capnp::word(0, 0, 0, 0, 5, 0, 6, 0),
-      ::capnp::word(207, 216, 224, 57, 13, 91, 169, 243),
-      ::capnp::word(29, 0, 0, 0, 1, 0, 2, 0),
-      ::capnp::word(176, 174, 139, 250, 136, 40, 24, 195),
-      ::capnp::word(0, 0, 7, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(21, 0, 0, 0, 58, 1, 0, 0),
-      ::capnp::word(37, 0, 0, 0, 7, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(33, 0, 0, 0, 231, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(115, 114, 99, 47, 100, 97, 116, 97),
-      ::capnp::word(115, 101, 116, 115, 47, 109, 107, 52),
-      ::capnp::word(56, 47, 109, 107, 52, 56, 46, 99),
-      ::capnp::word(97, 112, 110, 112, 58, 84, 114, 97),
-      ::capnp::word(110, 115, 102, 111, 114, 109, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 1, 0, 1, 0),
-      ::capnp::word(16, 0, 0, 0, 3, 0, 4, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 1, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(97, 0, 0, 0, 74, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(96, 0, 0, 0, 3, 0, 1, 0),
-      ::capnp::word(108, 0, 0, 0, 2, 0, 1, 0),
-      ::capnp::word(1, 0, 0, 0, 1, 0, 0, 0),
-      ::capnp::word(0, 0, 1, 0, 1, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(105, 0, 0, 0, 50, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(100, 0, 0, 0, 3, 0, 1, 0),
-      ::capnp::word(112, 0, 0, 0, 2, 0, 1, 0),
-      ::capnp::word(2, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(1, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(168, 197, 163, 185, 162, 91, 201, 179),
-      ::capnp::word(109, 0, 0, 0, 74, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(3, 0, 0, 0, 6, 0, 0, 0),
-      ::capnp::word(0, 0, 1, 0, 4, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(89, 0, 0, 0, 74, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(88, 0, 0, 0, 3, 0, 1, 0),
-      ::capnp::word(100, 0, 0, 0, 2, 0, 1, 0),
-      ::capnp::word(97, 108, 116, 105, 116, 117, 100, 101),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(2, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(2, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(97, 110, 103, 108, 101, 0, 0, 0),
-      ::capnp::word(7, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(7, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(112, 111, 115, 105, 116, 105, 111, 110),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(118, 101, 108, 111, 99, 105, 116, 121),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(3, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(3, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-    ];
-    pub fn get_field_types(index: u16) -> ::capnp::introspect::Type {
-      match index {
-        0 => <i8 as ::capnp::introspect::Introspect>::introspect(),
-        1 => <u16 as ::capnp::introspect::Introspect>::introspect(),
-        2 => <crate::datasets::mk48::mk48_capnp::transform::position::Owned as ::capnp::introspect::Introspect>::introspect(),
-        3 => <i16 as ::capnp::introspect::Introspect>::introspect(),
-        _ => panic!("invalid field index {}", index),
-      }
-    }
-    pub fn get_annotation_types(child_index: Option<u16>, index: u32) -> ::capnp::introspect::Type {
-      panic!("invalid annotation indices ({:?}, {}) ", child_index, index)
-    }
-    pub static RAW_SCHEMA: ::capnp::introspect::RawStructSchema = ::capnp::introspect::RawStructSchema {
-      encoded_node: &ENCODED_NODE,
-      nonunion_members: NONUNION_MEMBERS,
-      members_by_discriminant: MEMBERS_BY_DISCRIMINANT,
-    };
-    pub static NONUNION_MEMBERS : &[u16] = &[0,1,2,3];
-    pub static MEMBERS_BY_DISCRIMINANT : &[u16] = &[];
     pub const TYPE_ID: u64 = 0xf3a9_5b0d_39e0_d8cf;
   }
 
   pub mod position {
     #[derive(Copy, Clone)]
     pub struct Owned(());
-    impl ::capnp::introspect::Introspect for Owned { fn introspect() -> ::capnp::introspect::Type { ::capnp::introspect::TypeVariant::Struct(::capnp::introspect::RawBrandedStructSchema { generic: &_private::RAW_SCHEMA, field_types: _private::get_field_types, annotation_types: _private::get_annotation_types }).into() } }
     impl ::capnp::traits::Owned for Owned { type Reader<'a> = Reader<'a>; type Builder<'a> = Builder<'a>; }
     impl ::capnp::traits::OwnedStruct for Owned { type Reader<'a> = Reader<'a>; type Builder<'a> = Builder<'a>; }
     impl ::capnp::traits::Pipelined for Owned { type Pipeline = Pipeline; }
@@ -418,18 +225,6 @@ pub mod transform {
     impl <'a,> ::core::convert::From<::capnp::private::layout::StructReader<'a>> for Reader<'a,>  {
       fn from(reader: ::capnp::private::layout::StructReader<'a>) -> Self {
         Self { reader,  }
-      }
-    }
-
-    impl <'a,> ::core::convert::From<Reader<'a,>> for ::capnp::dynamic_value::Reader<'a>  {
-      fn from(reader: Reader<'a,>) -> Self {
-        Self::Struct(::capnp::dynamic_struct::Reader::new(reader.reader, ::capnp::schema::StructSchema::new(::capnp::introspect::RawBrandedStructSchema { generic: &_private::RAW_SCHEMA, field_types: _private::get_field_types::<>, annotation_types: _private::get_annotation_types::<>})))
-      }
-    }
-
-    impl <'a,> ::core::fmt::Debug for Reader<'a,>  {
-      fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::result::Result<(), ::core::fmt::Error> {
-        core::fmt::Debug::fmt(&::core::convert::Into::<::capnp::dynamic_value::Reader<'_>>::into(*self), f)
       }
     }
 
@@ -479,12 +274,6 @@ pub mod transform {
     impl <'a,> ::core::convert::From<::capnp::private::layout::StructBuilder<'a>> for Builder<'a,>  {
       fn from(builder: ::capnp::private::layout::StructBuilder<'a>) -> Self {
         Self { builder,  }
-      }
-    }
-
-    impl <'a,> ::core::convert::From<Builder<'a,>> for ::capnp::dynamic_value::Builder<'a>  {
-      fn from(builder: Builder<'a,>) -> Self {
-        Self::Struct(::capnp::dynamic_struct::Builder::new(builder.builder, ::capnp::schema::StructSchema::new(::capnp::introspect::RawBrandedStructSchema { generic: &_private::RAW_SCHEMA, field_types: _private::get_field_types::<>, annotation_types: _private::get_annotation_types::<>})))
       }
     }
 
@@ -548,74 +337,6 @@ pub mod transform {
     impl Pipeline  {
     }
     mod _private {
-      pub static ENCODED_NODE: [::capnp::Word; 49] = [
-        ::capnp::word(0, 0, 0, 0, 5, 0, 6, 0),
-        ::capnp::word(168, 197, 163, 185, 162, 91, 201, 179),
-        ::capnp::word(39, 0, 0, 0, 1, 0, 2, 0),
-        ::capnp::word(207, 216, 224, 57, 13, 91, 169, 243),
-        ::capnp::word(0, 0, 7, 0, 1, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(21, 0, 0, 0, 130, 1, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(33, 0, 0, 0, 119, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(115, 114, 99, 47, 100, 97, 116, 97),
-        ::capnp::word(115, 101, 116, 115, 47, 109, 107, 52),
-        ::capnp::word(56, 47, 109, 107, 52, 56, 46, 99),
-        ::capnp::word(97, 112, 110, 112, 58, 84, 114, 97),
-        ::capnp::word(110, 115, 102, 111, 114, 109, 46, 112),
-        ::capnp::word(111, 115, 105, 116, 105, 111, 110, 0),
-        ::capnp::word(8, 0, 0, 0, 3, 0, 4, 0),
-        ::capnp::word(0, 0, 0, 0, 1, 0, 0, 0),
-        ::capnp::word(0, 0, 1, 0, 2, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(41, 0, 0, 0, 18, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(36, 0, 0, 0, 3, 0, 1, 0),
-        ::capnp::word(48, 0, 0, 0, 2, 0, 1, 0),
-        ::capnp::word(1, 0, 0, 0, 2, 0, 0, 0),
-        ::capnp::word(0, 0, 1, 0, 3, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(45, 0, 0, 0, 18, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(40, 0, 0, 0, 3, 0, 1, 0),
-        ::capnp::word(52, 0, 0, 0, 2, 0, 1, 0),
-        ::capnp::word(120, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(10, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(10, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(121, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(10, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(10, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ];
-      pub fn get_field_types(index: u16) -> ::capnp::introspect::Type {
-        match index {
-          0 => <f32 as ::capnp::introspect::Introspect>::introspect(),
-          1 => <f32 as ::capnp::introspect::Introspect>::introspect(),
-          _ => panic!("invalid field index {}", index),
-        }
-      }
-      pub fn get_annotation_types(child_index: Option<u16>, index: u32) -> ::capnp::introspect::Type {
-        panic!("invalid annotation indices ({:?}, {}) ", child_index, index)
-      }
-      pub static RAW_SCHEMA: ::capnp::introspect::RawStructSchema = ::capnp::introspect::RawStructSchema {
-        encoded_node: &ENCODED_NODE,
-        nonunion_members: NONUNION_MEMBERS,
-        members_by_discriminant: MEMBERS_BY_DISCRIMINANT,
-      };
-      pub static NONUNION_MEMBERS : &[u16] = &[0,1];
-      pub static MEMBERS_BY_DISCRIMINANT : &[u16] = &[];
       pub const TYPE_ID: u64 = 0xb3c9_5ba2_b9a3_c5a8;
     }
   }
@@ -624,7 +345,6 @@ pub mod transform {
 pub mod guidance {
   #[derive(Copy, Clone)]
   pub struct Owned(());
-  impl ::capnp::introspect::Introspect for Owned { fn introspect() -> ::capnp::introspect::Type { ::capnp::introspect::TypeVariant::Struct(::capnp::introspect::RawBrandedStructSchema { generic: &_private::RAW_SCHEMA, field_types: _private::get_field_types, annotation_types: _private::get_annotation_types }).into() } }
   impl ::capnp::traits::Owned for Owned { type Reader<'a> = Reader<'a>; type Builder<'a> = Builder<'a>; }
   impl ::capnp::traits::OwnedStruct for Owned { type Reader<'a> = Reader<'a>; type Builder<'a> = Builder<'a>; }
   impl ::capnp::traits::Pipelined for Owned { type Pipeline = Pipeline; }
@@ -641,18 +361,6 @@ pub mod guidance {
   impl <'a,> ::core::convert::From<::capnp::private::layout::StructReader<'a>> for Reader<'a,>  {
     fn from(reader: ::capnp::private::layout::StructReader<'a>) -> Self {
       Self { reader,  }
-    }
-  }
-
-  impl <'a,> ::core::convert::From<Reader<'a,>> for ::capnp::dynamic_value::Reader<'a>  {
-    fn from(reader: Reader<'a,>) -> Self {
-      Self::Struct(::capnp::dynamic_struct::Reader::new(reader.reader, ::capnp::schema::StructSchema::new(::capnp::introspect::RawBrandedStructSchema { generic: &_private::RAW_SCHEMA, field_types: _private::get_field_types::<>, annotation_types: _private::get_annotation_types::<>})))
-    }
-  }
-
-  impl <'a,> ::core::fmt::Debug for Reader<'a,>  {
-    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::result::Result<(), ::core::fmt::Error> {
-      core::fmt::Debug::fmt(&::core::convert::Into::<::capnp::dynamic_value::Reader<'_>>::into(*self), f)
     }
   }
 
@@ -706,12 +414,6 @@ pub mod guidance {
   impl <'a,> ::core::convert::From<::capnp::private::layout::StructBuilder<'a>> for Builder<'a,>  {
     fn from(builder: ::capnp::private::layout::StructBuilder<'a>) -> Self {
       Self { builder,  }
-    }
-  }
-
-  impl <'a,> ::core::convert::From<Builder<'a,>> for ::capnp::dynamic_value::Builder<'a>  {
-    fn from(builder: Builder<'a,>) -> Self {
-      Self::Struct(::capnp::dynamic_struct::Builder::new(builder.builder, ::capnp::schema::StructSchema::new(::capnp::introspect::RawBrandedStructSchema { generic: &_private::RAW_SCHEMA, field_types: _private::get_field_types::<>, annotation_types: _private::get_annotation_types::<>})))
     }
   }
 
@@ -783,92 +485,6 @@ pub mod guidance {
   impl Pipeline  {
   }
   mod _private {
-    pub static ENCODED_NODE: [::capnp::Word; 66] = [
-      ::capnp::word(0, 0, 0, 0, 5, 0, 6, 0),
-      ::capnp::word(199, 151, 126, 166, 59, 29, 174, 215),
-      ::capnp::word(29, 0, 0, 0, 1, 0, 1, 0),
-      ::capnp::word(176, 174, 139, 250, 136, 40, 24, 195),
-      ::capnp::word(0, 0, 7, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(21, 0, 0, 0, 50, 1, 0, 0),
-      ::capnp::word(37, 0, 0, 0, 7, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(33, 0, 0, 0, 175, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(115, 114, 99, 47, 100, 97, 116, 97),
-      ::capnp::word(115, 101, 116, 115, 47, 109, 107, 52),
-      ::capnp::word(56, 47, 109, 107, 52, 56, 46, 99),
-      ::capnp::word(97, 112, 110, 112, 58, 71, 117, 105),
-      ::capnp::word(100, 97, 110, 99, 101, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 1, 0, 1, 0),
-      ::capnp::word(12, 0, 0, 0, 3, 0, 4, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 1, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(69, 0, 0, 0, 50, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(64, 0, 0, 0, 3, 0, 1, 0),
-      ::capnp::word(76, 0, 0, 0, 2, 0, 1, 0),
-      ::capnp::word(1, 0, 0, 0, 16, 0, 0, 0),
-      ::capnp::word(0, 0, 1, 0, 1, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(73, 0, 0, 0, 74, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(72, 0, 0, 0, 3, 0, 1, 0),
-      ::capnp::word(84, 0, 0, 0, 2, 0, 1, 0),
-      ::capnp::word(2, 0, 0, 0, 2, 0, 0, 0),
-      ::capnp::word(0, 0, 1, 0, 2, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(81, 0, 0, 0, 74, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(80, 0, 0, 0, 3, 0, 1, 0),
-      ::capnp::word(92, 0, 0, 0, 2, 0, 1, 0),
-      ::capnp::word(97, 110, 103, 108, 101, 0, 0, 0),
-      ::capnp::word(7, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(7, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(115, 117, 98, 109, 101, 114, 103, 101),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(1, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(1, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(118, 101, 108, 111, 99, 105, 116, 121),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(3, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(3, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-    ];
-    pub fn get_field_types(index: u16) -> ::capnp::introspect::Type {
-      match index {
-        0 => <u16 as ::capnp::introspect::Introspect>::introspect(),
-        1 => <bool as ::capnp::introspect::Introspect>::introspect(),
-        2 => <i16 as ::capnp::introspect::Introspect>::introspect(),
-        _ => panic!("invalid field index {}", index),
-      }
-    }
-    pub fn get_annotation_types(child_index: Option<u16>, index: u32) -> ::capnp::introspect::Type {
-      panic!("invalid annotation indices ({:?}, {}) ", child_index, index)
-    }
-    pub static RAW_SCHEMA: ::capnp::introspect::RawStructSchema = ::capnp::introspect::RawStructSchema {
-      encoded_node: &ENCODED_NODE,
-      nonunion_members: NONUNION_MEMBERS,
-      members_by_discriminant: MEMBERS_BY_DISCRIMINANT,
-    };
-    pub static NONUNION_MEMBERS : &[u16] = &[0,1,2];
-    pub static MEMBERS_BY_DISCRIMINANT : &[u16] = &[];
     pub const TYPE_ID: u64 = 0xd7ae_1d3b_a67e_97c7;
   }
 }
@@ -876,7 +492,6 @@ pub mod guidance {
 pub mod contact {
   #[derive(Copy, Clone)]
   pub struct Owned(());
-  impl ::capnp::introspect::Introspect for Owned { fn introspect() -> ::capnp::introspect::Type { ::capnp::introspect::TypeVariant::Struct(::capnp::introspect::RawBrandedStructSchema { generic: &_private::RAW_SCHEMA, field_types: _private::get_field_types, annotation_types: _private::get_annotation_types }).into() } }
   impl ::capnp::traits::Owned for Owned { type Reader<'a> = Reader<'a>; type Builder<'a> = Builder<'a>; }
   impl ::capnp::traits::OwnedStruct for Owned { type Reader<'a> = Reader<'a>; type Builder<'a> = Builder<'a>; }
   impl ::capnp::traits::Pipelined for Owned { type Pipeline = Pipeline; }
@@ -893,18 +508,6 @@ pub mod contact {
   impl <'a,> ::core::convert::From<::capnp::private::layout::StructReader<'a>> for Reader<'a,>  {
     fn from(reader: ::capnp::private::layout::StructReader<'a>) -> Self {
       Self { reader,  }
-    }
-  }
-
-  impl <'a,> ::core::convert::From<Reader<'a,>> for ::capnp::dynamic_value::Reader<'a>  {
-    fn from(reader: Reader<'a,>) -> Self {
-      Self::Struct(::capnp::dynamic_struct::Reader::new(reader.reader, ::capnp::schema::StructSchema::new(::capnp::introspect::RawBrandedStructSchema { generic: &_private::RAW_SCHEMA, field_types: _private::get_field_types::<>, annotation_types: _private::get_annotation_types::<>})))
-    }
-  }
-
-  impl <'a,> ::core::fmt::Debug for Reader<'a,>  {
-    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::result::Result<(), ::core::fmt::Error> {
-      core::fmt::Debug::fmt(&::core::convert::Into::<::capnp::dynamic_value::Reader<'_>>::into(*self), f)
     }
   }
 
@@ -994,12 +597,6 @@ pub mod contact {
   impl <'a,> ::core::convert::From<::capnp::private::layout::StructBuilder<'a>> for Builder<'a,>  {
     fn from(builder: ::capnp::private::layout::StructBuilder<'a>) -> Self {
       Self { builder,  }
-    }
-  }
-
-  impl <'a,> ::core::convert::From<Builder<'a,>> for ::capnp::dynamic_value::Builder<'a>  {
-    fn from(builder: Builder<'a,>) -> Self {
-      Self::Struct(::capnp::dynamic_struct::Builder::new(builder.builder, ::capnp::schema::StructSchema::new(::capnp::introspect::RawBrandedStructSchema { generic: &_private::RAW_SCHEMA, field_types: _private::get_field_types::<>, annotation_types: _private::get_annotation_types::<>})))
     }
   }
 
@@ -1159,170 +756,6 @@ pub mod contact {
     }
   }
   mod _private {
-    pub static ENCODED_NODE: [::capnp::Word; 139] = [
-      ::capnp::word(0, 0, 0, 0, 5, 0, 6, 0),
-      ::capnp::word(33, 56, 172, 91, 209, 134, 106, 130),
-      ::capnp::word(29, 0, 0, 0, 1, 0, 2, 0),
-      ::capnp::word(176, 174, 139, 250, 136, 40, 24, 195),
-      ::capnp::word(4, 0, 7, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(21, 0, 0, 0, 42, 1, 0, 0),
-      ::capnp::word(37, 0, 0, 0, 7, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(33, 0, 0, 0, 199, 1, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(115, 114, 99, 47, 100, 97, 116, 97),
-      ::capnp::word(115, 101, 116, 115, 47, 109, 107, 52),
-      ::capnp::word(56, 47, 109, 107, 52, 56, 46, 99),
-      ::capnp::word(97, 112, 110, 112, 58, 67, 111, 110),
-      ::capnp::word(116, 97, 99, 116, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 1, 0, 1, 0),
-      ::capnp::word(32, 0, 0, 0, 3, 0, 4, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 1, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(209, 0, 0, 0, 58, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(204, 0, 0, 0, 3, 0, 1, 0),
-      ::capnp::word(216, 0, 0, 0, 2, 0, 1, 0),
-      ::capnp::word(1, 0, 0, 0, 1, 0, 0, 0),
-      ::capnp::word(0, 0, 1, 0, 1, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(213, 0, 0, 0, 74, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(212, 0, 0, 0, 3, 0, 1, 0),
-      ::capnp::word(224, 0, 0, 0, 2, 0, 1, 0),
-      ::capnp::word(2, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(1, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(48, 20, 152, 30, 64, 184, 176, 172),
-      ::capnp::word(221, 0, 0, 0, 90, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(3, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 1, 0, 4, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(201, 0, 0, 0, 74, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(200, 0, 0, 0, 3, 0, 1, 0),
-      ::capnp::word(212, 0, 0, 0, 2, 0, 1, 0),
-      ::capnp::word(4, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(1, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(20, 105, 210, 210, 142, 74, 58, 246),
-      ::capnp::word(209, 0, 0, 0, 74, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(5, 0, 0, 0, 1, 0, 0, 0),
-      ::capnp::word(0, 0, 1, 0, 7, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(189, 0, 0, 0, 66, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(184, 0, 0, 0, 3, 0, 1, 0),
-      ::capnp::word(212, 0, 0, 0, 2, 0, 1, 0),
-      ::capnp::word(6, 0, 0, 0, 2, 0, 0, 0),
-      ::capnp::word(0, 0, 1, 0, 8, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(209, 0, 0, 0, 82, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(208, 0, 0, 0, 3, 0, 1, 0),
-      ::capnp::word(220, 0, 0, 0, 2, 0, 1, 0),
-      ::capnp::word(7, 0, 0, 0, 3, 0, 0, 0),
-      ::capnp::word(0, 0, 1, 0, 9, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(217, 0, 0, 0, 106, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(216, 0, 0, 0, 3, 0, 1, 0),
-      ::capnp::word(244, 0, 0, 0, 2, 0, 1, 0),
-      ::capnp::word(100, 97, 109, 97, 103, 101, 0, 0),
-      ::capnp::word(6, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(6, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(101, 110, 116, 105, 116, 121, 73, 100),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(8, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(8, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(101, 110, 116, 105, 116, 121, 84, 121),
-      ::capnp::word(112, 101, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(103, 117, 105, 100, 97, 110, 99, 101),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(16, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(199, 151, 126, 166, 59, 29, 174, 215),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(16, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(112, 108, 97, 121, 101, 114, 73, 100),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(114, 101, 108, 111, 97, 100, 115, 0),
-      ::capnp::word(14, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 3, 0, 1, 0),
-      ::capnp::word(1, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(14, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(116, 114, 97, 110, 115, 102, 111, 114),
-      ::capnp::word(109, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(16, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(207, 216, 224, 57, 13, 91, 169, 243),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(16, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(116, 117, 114, 114, 101, 116, 65, 110),
-      ::capnp::word(103, 108, 101, 115, 0, 0, 0, 0),
-      ::capnp::word(14, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 3, 0, 1, 0),
-      ::capnp::word(7, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(14, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-    ];
-    pub fn get_field_types(index: u16) -> ::capnp::introspect::Type {
-      match index {
-        0 => <u8 as ::capnp::introspect::Introspect>::introspect(),
-        1 => <u32 as ::capnp::introspect::Introspect>::introspect(),
-        2 => <crate::datasets::mk48::mk48_capnp::contact::entity_type::Owned as ::capnp::introspect::Introspect>::introspect(),
-        3 => <crate::datasets::mk48::mk48_capnp::guidance::Owned as ::capnp::introspect::Introspect>::introspect(),
-        4 => <crate::datasets::mk48::mk48_capnp::contact::player_id::Owned as ::capnp::introspect::Introspect>::introspect(),
-        5 => <::capnp::primitive_list::Owned<bool> as ::capnp::introspect::Introspect>::introspect(),
-        6 => <crate::datasets::mk48::mk48_capnp::transform::Owned as ::capnp::introspect::Introspect>::introspect(),
-        7 => <::capnp::primitive_list::Owned<u16> as ::capnp::introspect::Introspect>::introspect(),
-        _ => panic!("invalid field index {}", index),
-      }
-    }
-    pub fn get_annotation_types(child_index: Option<u16>, index: u32) -> ::capnp::introspect::Type {
-      panic!("invalid annotation indices ({:?}, {}) ", child_index, index)
-    }
-    pub static RAW_SCHEMA: ::capnp::introspect::RawStructSchema = ::capnp::introspect::RawStructSchema {
-      encoded_node: &ENCODED_NODE,
-      nonunion_members: NONUNION_MEMBERS,
-      members_by_discriminant: MEMBERS_BY_DISCRIMINANT,
-    };
-    pub static NONUNION_MEMBERS : &[u16] = &[0,1,2,3,4,5,6,7];
-    pub static MEMBERS_BY_DISCRIMINANT : &[u16] = &[];
     pub const TYPE_ID: u64 = 0x826a_86d1_5bac_3821;
   }
 
@@ -1331,7 +764,6 @@ pub mod contact {
 
     #[derive(Copy, Clone)]
     pub struct Owned(());
-    impl ::capnp::introspect::Introspect for Owned { fn introspect() -> ::capnp::introspect::Type { ::capnp::introspect::TypeVariant::Struct(::capnp::introspect::RawBrandedStructSchema { generic: &_private::RAW_SCHEMA, field_types: _private::get_field_types, annotation_types: _private::get_annotation_types }).into() } }
     impl ::capnp::traits::Owned for Owned { type Reader<'a> = Reader<'a>; type Builder<'a> = Builder<'a>; }
     impl ::capnp::traits::OwnedStruct for Owned { type Reader<'a> = Reader<'a>; type Builder<'a> = Builder<'a>; }
     impl ::capnp::traits::Pipelined for Owned { type Pipeline = Pipeline; }
@@ -1348,18 +780,6 @@ pub mod contact {
     impl <'a,> ::core::convert::From<::capnp::private::layout::StructReader<'a>> for Reader<'a,>  {
       fn from(reader: ::capnp::private::layout::StructReader<'a>) -> Self {
         Self { reader,  }
-      }
-    }
-
-    impl <'a,> ::core::convert::From<Reader<'a,>> for ::capnp::dynamic_value::Reader<'a>  {
-      fn from(reader: Reader<'a,>) -> Self {
-        Self::Struct(::capnp::dynamic_struct::Reader::new(reader.reader, ::capnp::schema::StructSchema::new(::capnp::introspect::RawBrandedStructSchema { generic: &_private::RAW_SCHEMA, field_types: _private::get_field_types::<>, annotation_types: _private::get_annotation_types::<>})))
-      }
-    }
-
-    impl <'a,> ::core::fmt::Debug for Reader<'a,>  {
-      fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::result::Result<(), ::core::fmt::Error> {
-        core::fmt::Debug::fmt(&::core::convert::Into::<::capnp::dynamic_value::Reader<'_>>::into(*self), f)
       }
     }
 
@@ -1420,12 +840,6 @@ pub mod contact {
       }
     }
 
-    impl <'a,> ::core::convert::From<Builder<'a,>> for ::capnp::dynamic_value::Builder<'a>  {
-      fn from(builder: Builder<'a,>) -> Self {
-        Self::Struct(::capnp::dynamic_struct::Builder::new(builder.builder, ::capnp::schema::StructSchema::new(::capnp::introspect::RawBrandedStructSchema { generic: &_private::RAW_SCHEMA, field_types: _private::get_field_types::<>, annotation_types: _private::get_annotation_types::<>})))
-      }
-    }
-
     impl <'a,> ::capnp::traits::ImbueMut<'a> for Builder<'a,>  {
       fn imbue_mut(&mut self, cap_table: &'a mut ::capnp::private::layout::CapTable) {
         self.builder.imbue(::capnp::private::layout::CapTableBuilder::Plain(cap_table))
@@ -1466,7 +880,7 @@ pub mod contact {
       #[inline]
       pub fn set_some(&mut self, value: crate::datasets::mk48::mk48_capnp::EntityType)  {
         self.builder.set_data_field::<u16>(1, 1);
-        self.builder.set_data_field::<u16>(4, value as u16);
+        self.builder.set_data_field::<u16>(4, value as u16)
       }
       #[inline]
       pub fn which(self) -> ::core::result::Result<WhichBuilder, ::capnp::NotInSchema> {
@@ -1495,74 +909,6 @@ pub mod contact {
     impl Pipeline  {
     }
     mod _private {
-      pub static ENCODED_NODE: [::capnp::Word; 49] = [
-        ::capnp::word(0, 0, 0, 0, 5, 0, 6, 0),
-        ::capnp::word(48, 20, 152, 30, 64, 184, 176, 172),
-        ::capnp::word(37, 0, 0, 0, 1, 0, 2, 0),
-        ::capnp::word(33, 56, 172, 91, 209, 134, 106, 130),
-        ::capnp::word(4, 0, 7, 0, 1, 0, 2, 0),
-        ::capnp::word(1, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(21, 0, 0, 0, 130, 1, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(33, 0, 0, 0, 119, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(115, 114, 99, 47, 100, 97, 116, 97),
-        ::capnp::word(115, 101, 116, 115, 47, 109, 107, 52),
-        ::capnp::word(56, 47, 109, 107, 52, 56, 46, 99),
-        ::capnp::word(97, 112, 110, 112, 58, 67, 111, 110),
-        ::capnp::word(116, 97, 99, 116, 46, 101, 110, 116),
-        ::capnp::word(105, 116, 121, 84, 121, 112, 101, 0),
-        ::capnp::word(8, 0, 0, 0, 3, 0, 4, 0),
-        ::capnp::word(0, 0, 255, 255, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 1, 0, 2, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(41, 0, 0, 0, 42, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(36, 0, 0, 0, 3, 0, 1, 0),
-        ::capnp::word(48, 0, 0, 0, 2, 0, 1, 0),
-        ::capnp::word(1, 0, 254, 255, 4, 0, 0, 0),
-        ::capnp::word(0, 0, 1, 0, 3, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(45, 0, 0, 0, 42, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(40, 0, 0, 0, 3, 0, 1, 0),
-        ::capnp::word(52, 0, 0, 0, 2, 0, 1, 0),
-        ::capnp::word(110, 111, 110, 101, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(115, 111, 109, 101, 0, 0, 0, 0),
-        ::capnp::word(15, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(230, 17, 169, 191, 69, 155, 201, 243),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(15, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ];
-      pub fn get_field_types(index: u16) -> ::capnp::introspect::Type {
-        match index {
-          0 => <() as ::capnp::introspect::Introspect>::introspect(),
-          1 => <crate::datasets::mk48::mk48_capnp::EntityType as ::capnp::introspect::Introspect>::introspect(),
-          _ => panic!("invalid field index {}", index),
-        }
-      }
-      pub fn get_annotation_types(child_index: Option<u16>, index: u32) -> ::capnp::introspect::Type {
-        panic!("invalid annotation indices ({:?}, {}) ", child_index, index)
-      }
-      pub static RAW_SCHEMA: ::capnp::introspect::RawStructSchema = ::capnp::introspect::RawStructSchema {
-        encoded_node: &ENCODED_NODE,
-        nonunion_members: NONUNION_MEMBERS,
-        members_by_discriminant: MEMBERS_BY_DISCRIMINANT,
-      };
-      pub static NONUNION_MEMBERS : &[u16] = &[];
-      pub static MEMBERS_BY_DISCRIMINANT : &[u16] = &[0,1];
       pub const TYPE_ID: u64 = 0xacb0_b840_1e98_1430;
     }
     pub enum Which {
@@ -1578,7 +924,6 @@ pub mod contact {
 
     #[derive(Copy, Clone)]
     pub struct Owned(());
-    impl ::capnp::introspect::Introspect for Owned { fn introspect() -> ::capnp::introspect::Type { ::capnp::introspect::TypeVariant::Struct(::capnp::introspect::RawBrandedStructSchema { generic: &_private::RAW_SCHEMA, field_types: _private::get_field_types, annotation_types: _private::get_annotation_types }).into() } }
     impl ::capnp::traits::Owned for Owned { type Reader<'a> = Reader<'a>; type Builder<'a> = Builder<'a>; }
     impl ::capnp::traits::OwnedStruct for Owned { type Reader<'a> = Reader<'a>; type Builder<'a> = Builder<'a>; }
     impl ::capnp::traits::Pipelined for Owned { type Pipeline = Pipeline; }
@@ -1595,18 +940,6 @@ pub mod contact {
     impl <'a,> ::core::convert::From<::capnp::private::layout::StructReader<'a>> for Reader<'a,>  {
       fn from(reader: ::capnp::private::layout::StructReader<'a>) -> Self {
         Self { reader,  }
-      }
-    }
-
-    impl <'a,> ::core::convert::From<Reader<'a,>> for ::capnp::dynamic_value::Reader<'a>  {
-      fn from(reader: Reader<'a,>) -> Self {
-        Self::Struct(::capnp::dynamic_struct::Reader::new(reader.reader, ::capnp::schema::StructSchema::new(::capnp::introspect::RawBrandedStructSchema { generic: &_private::RAW_SCHEMA, field_types: _private::get_field_types::<>, annotation_types: _private::get_annotation_types::<>})))
-      }
-    }
-
-    impl <'a,> ::core::fmt::Debug for Reader<'a,>  {
-      fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::result::Result<(), ::core::fmt::Error> {
-        core::fmt::Debug::fmt(&::core::convert::Into::<::capnp::dynamic_value::Reader<'_>>::into(*self), f)
       }
     }
 
@@ -1664,12 +997,6 @@ pub mod contact {
     impl <'a,> ::core::convert::From<::capnp::private::layout::StructBuilder<'a>> for Builder<'a,>  {
       fn from(builder: ::capnp::private::layout::StructBuilder<'a>) -> Self {
         Self { builder,  }
-      }
-    }
-
-    impl <'a,> ::core::convert::From<Builder<'a,>> for ::capnp::dynamic_value::Builder<'a>  {
-      fn from(builder: Builder<'a,>) -> Self {
-        Self::Struct(::capnp::dynamic_struct::Builder::new(builder.builder, ::capnp::schema::StructSchema::new(::capnp::introspect::RawBrandedStructSchema { generic: &_private::RAW_SCHEMA, field_types: _private::get_field_types::<>, annotation_types: _private::get_annotation_types::<>})))
       }
     }
 
@@ -1742,74 +1069,6 @@ pub mod contact {
     impl Pipeline  {
     }
     mod _private {
-      pub static ENCODED_NODE: [::capnp::Word; 49] = [
-        ::capnp::word(0, 0, 0, 0, 5, 0, 6, 0),
-        ::capnp::word(20, 105, 210, 210, 142, 74, 58, 246),
-        ::capnp::word(37, 0, 0, 0, 1, 0, 2, 0),
-        ::capnp::word(33, 56, 172, 91, 209, 134, 106, 130),
-        ::capnp::word(4, 0, 7, 0, 1, 0, 2, 0),
-        ::capnp::word(5, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(21, 0, 0, 0, 114, 1, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(33, 0, 0, 0, 119, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(115, 114, 99, 47, 100, 97, 116, 97),
-        ::capnp::word(115, 101, 116, 115, 47, 109, 107, 52),
-        ::capnp::word(56, 47, 109, 107, 52, 56, 46, 99),
-        ::capnp::word(97, 112, 110, 112, 58, 67, 111, 110),
-        ::capnp::word(116, 97, 99, 116, 46, 112, 108, 97),
-        ::capnp::word(121, 101, 114, 73, 100, 0, 0, 0),
-        ::capnp::word(8, 0, 0, 0, 3, 0, 4, 0),
-        ::capnp::word(0, 0, 255, 255, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 1, 0, 5, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(41, 0, 0, 0, 42, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(36, 0, 0, 0, 3, 0, 1, 0),
-        ::capnp::word(48, 0, 0, 0, 2, 0, 1, 0),
-        ::capnp::word(1, 0, 254, 255, 6, 0, 0, 0),
-        ::capnp::word(0, 0, 1, 0, 6, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(45, 0, 0, 0, 42, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(40, 0, 0, 0, 3, 0, 1, 0),
-        ::capnp::word(52, 0, 0, 0, 2, 0, 1, 0),
-        ::capnp::word(110, 111, 110, 101, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(115, 111, 109, 101, 0, 0, 0, 0),
-        ::capnp::word(7, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(7, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ];
-      pub fn get_field_types(index: u16) -> ::capnp::introspect::Type {
-        match index {
-          0 => <() as ::capnp::introspect::Introspect>::introspect(),
-          1 => <u16 as ::capnp::introspect::Introspect>::introspect(),
-          _ => panic!("invalid field index {}", index),
-        }
-      }
-      pub fn get_annotation_types(child_index: Option<u16>, index: u32) -> ::capnp::introspect::Type {
-        panic!("invalid annotation indices ({:?}, {}) ", child_index, index)
-      }
-      pub static RAW_SCHEMA: ::capnp::introspect::RawStructSchema = ::capnp::introspect::RawStructSchema {
-        encoded_node: &ENCODED_NODE,
-        nonunion_members: NONUNION_MEMBERS,
-        members_by_discriminant: MEMBERS_BY_DISCRIMINANT,
-      };
-      pub static NONUNION_MEMBERS : &[u16] = &[];
-      pub static MEMBERS_BY_DISCRIMINANT : &[u16] = &[0,1];
       pub const TYPE_ID: u64 = 0xf63a_4a8e_d2d2_6914;
     }
     pub enum Which {
@@ -1824,7 +1083,6 @@ pub mod contact {
 pub mod terrain_update {
   #[derive(Copy, Clone)]
   pub struct Owned(());
-  impl ::capnp::introspect::Introspect for Owned { fn introspect() -> ::capnp::introspect::Type { ::capnp::introspect::TypeVariant::Struct(::capnp::introspect::RawBrandedStructSchema { generic: &_private::RAW_SCHEMA, field_types: _private::get_field_types, annotation_types: _private::get_annotation_types }).into() } }
   impl ::capnp::traits::Owned for Owned { type Reader<'a> = Reader<'a>; type Builder<'a> = Builder<'a>; }
   impl ::capnp::traits::OwnedStruct for Owned { type Reader<'a> = Reader<'a>; type Builder<'a> = Builder<'a>; }
   impl ::capnp::traits::Pipelined for Owned { type Pipeline = Pipeline; }
@@ -1841,18 +1099,6 @@ pub mod terrain_update {
   impl <'a,> ::core::convert::From<::capnp::private::layout::StructReader<'a>> for Reader<'a,>  {
     fn from(reader: ::capnp::private::layout::StructReader<'a>) -> Self {
       Self { reader,  }
-    }
-  }
-
-  impl <'a,> ::core::convert::From<Reader<'a,>> for ::capnp::dynamic_value::Reader<'a>  {
-    fn from(reader: Reader<'a,>) -> Self {
-      Self::Struct(::capnp::dynamic_struct::Reader::new(reader.reader, ::capnp::schema::StructSchema::new(::capnp::introspect::RawBrandedStructSchema { generic: &_private::RAW_SCHEMA, field_types: _private::get_field_types::<>, annotation_types: _private::get_annotation_types::<>})))
-    }
-  }
-
-  impl <'a,> ::core::fmt::Debug for Reader<'a,>  {
-    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::result::Result<(), ::core::fmt::Error> {
-      core::fmt::Debug::fmt(&::core::convert::Into::<::capnp::dynamic_value::Reader<'_>>::into(*self), f)
     }
   }
 
@@ -1906,12 +1152,6 @@ pub mod terrain_update {
   impl <'a,> ::core::convert::From<::capnp::private::layout::StructBuilder<'a>> for Builder<'a,>  {
     fn from(builder: ::capnp::private::layout::StructBuilder<'a>) -> Self {
       Self { builder,  }
-    }
-  }
-
-  impl <'a,> ::core::convert::From<Builder<'a,>> for ::capnp::dynamic_value::Builder<'a>  {
-    fn from(builder: Builder<'a,>) -> Self {
-      Self::Struct(::capnp::dynamic_struct::Builder::new(builder.builder, ::capnp::schema::StructSchema::new(::capnp::introspect::RawBrandedStructSchema { generic: &_private::RAW_SCHEMA, field_types: _private::get_field_types::<>, annotation_types: _private::get_annotation_types::<>})))
     }
   }
 
@@ -1988,79 +1228,12 @@ pub mod terrain_update {
     }
   }
   mod _private {
-    pub static ENCODED_NODE: [::capnp::Word; 47] = [
-      ::capnp::word(0, 0, 0, 0, 5, 0, 6, 0),
-      ::capnp::word(60, 102, 209, 233, 247, 217, 142, 197),
-      ::capnp::word(29, 0, 0, 0, 1, 0, 1, 0),
-      ::capnp::word(176, 174, 139, 250, 136, 40, 24, 195),
-      ::capnp::word(1, 0, 7, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(21, 0, 0, 0, 90, 1, 0, 0),
-      ::capnp::word(41, 0, 0, 0, 7, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(37, 0, 0, 0, 119, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(115, 114, 99, 47, 100, 97, 116, 97),
-      ::capnp::word(115, 101, 116, 115, 47, 109, 107, 52),
-      ::capnp::word(56, 47, 109, 107, 52, 56, 46, 99),
-      ::capnp::word(97, 112, 110, 112, 58, 84, 101, 114),
-      ::capnp::word(114, 97, 105, 110, 85, 112, 100, 97),
-      ::capnp::word(116, 101, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 1, 0, 1, 0),
-      ::capnp::word(8, 0, 0, 0, 3, 0, 4, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(1, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(28, 50, 188, 63, 181, 243, 91, 168),
-      ::capnp::word(41, 0, 0, 0, 66, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(1, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 1, 0, 2, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(17, 0, 0, 0, 42, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(12, 0, 0, 0, 3, 0, 1, 0),
-      ::capnp::word(40, 0, 0, 0, 2, 0, 1, 0),
-      ::capnp::word(99, 104, 117, 110, 107, 73, 100, 0),
-      ::capnp::word(100, 97, 116, 97, 0, 0, 0, 0),
-      ::capnp::word(14, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 3, 0, 1, 0),
-      ::capnp::word(6, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(14, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-    ];
-    pub fn get_field_types(index: u16) -> ::capnp::introspect::Type {
-      match index {
-        0 => <crate::datasets::mk48::mk48_capnp::terrain_update::chunk_id::Owned as ::capnp::introspect::Introspect>::introspect(),
-        1 => <::capnp::primitive_list::Owned<u8> as ::capnp::introspect::Introspect>::introspect(),
-        _ => panic!("invalid field index {}", index),
-      }
-    }
-    pub fn get_annotation_types(child_index: Option<u16>, index: u32) -> ::capnp::introspect::Type {
-      panic!("invalid annotation indices ({:?}, {}) ", child_index, index)
-    }
-    pub static RAW_SCHEMA: ::capnp::introspect::RawStructSchema = ::capnp::introspect::RawStructSchema {
-      encoded_node: &ENCODED_NODE,
-      nonunion_members: NONUNION_MEMBERS,
-      members_by_discriminant: MEMBERS_BY_DISCRIMINANT,
-    };
-    pub static NONUNION_MEMBERS : &[u16] = &[0,1];
-    pub static MEMBERS_BY_DISCRIMINANT : &[u16] = &[];
     pub const TYPE_ID: u64 = 0xc58e_d9f7_e9d1_663c;
   }
 
   pub mod chunk_id {
     #[derive(Copy, Clone)]
     pub struct Owned(());
-    impl ::capnp::introspect::Introspect for Owned { fn introspect() -> ::capnp::introspect::Type { ::capnp::introspect::TypeVariant::Struct(::capnp::introspect::RawBrandedStructSchema { generic: &_private::RAW_SCHEMA, field_types: _private::get_field_types, annotation_types: _private::get_annotation_types }).into() } }
     impl ::capnp::traits::Owned for Owned { type Reader<'a> = Reader<'a>; type Builder<'a> = Builder<'a>; }
     impl ::capnp::traits::OwnedStruct for Owned { type Reader<'a> = Reader<'a>; type Builder<'a> = Builder<'a>; }
     impl ::capnp::traits::Pipelined for Owned { type Pipeline = Pipeline; }
@@ -2077,18 +1250,6 @@ pub mod terrain_update {
     impl <'a,> ::core::convert::From<::capnp::private::layout::StructReader<'a>> for Reader<'a,>  {
       fn from(reader: ::capnp::private::layout::StructReader<'a>) -> Self {
         Self { reader,  }
-      }
-    }
-
-    impl <'a,> ::core::convert::From<Reader<'a,>> for ::capnp::dynamic_value::Reader<'a>  {
-      fn from(reader: Reader<'a,>) -> Self {
-        Self::Struct(::capnp::dynamic_struct::Reader::new(reader.reader, ::capnp::schema::StructSchema::new(::capnp::introspect::RawBrandedStructSchema { generic: &_private::RAW_SCHEMA, field_types: _private::get_field_types::<>, annotation_types: _private::get_annotation_types::<>})))
-      }
-    }
-
-    impl <'a,> ::core::fmt::Debug for Reader<'a,>  {
-      fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::result::Result<(), ::core::fmt::Error> {
-        core::fmt::Debug::fmt(&::core::convert::Into::<::capnp::dynamic_value::Reader<'_>>::into(*self), f)
       }
     }
 
@@ -2138,12 +1299,6 @@ pub mod terrain_update {
     impl <'a,> ::core::convert::From<::capnp::private::layout::StructBuilder<'a>> for Builder<'a,>  {
       fn from(builder: ::capnp::private::layout::StructBuilder<'a>) -> Self {
         Self { builder,  }
-      }
-    }
-
-    impl <'a,> ::core::convert::From<Builder<'a,>> for ::capnp::dynamic_value::Builder<'a>  {
-      fn from(builder: Builder<'a,>) -> Self {
-        Self::Struct(::capnp::dynamic_struct::Builder::new(builder.builder, ::capnp::schema::StructSchema::new(::capnp::introspect::RawBrandedStructSchema { generic: &_private::RAW_SCHEMA, field_types: _private::get_field_types::<>, annotation_types: _private::get_annotation_types::<>})))
       }
     }
 
@@ -2207,75 +1362,6 @@ pub mod terrain_update {
     impl Pipeline  {
     }
     mod _private {
-      pub static ENCODED_NODE: [::capnp::Word; 50] = [
-        ::capnp::word(0, 0, 0, 0, 5, 0, 6, 0),
-        ::capnp::word(28, 50, 188, 63, 181, 243, 91, 168),
-        ::capnp::word(43, 0, 0, 0, 1, 0, 1, 0),
-        ::capnp::word(60, 102, 209, 233, 247, 217, 142, 197),
-        ::capnp::word(1, 0, 7, 0, 1, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(21, 0, 0, 0, 154, 1, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(37, 0, 0, 0, 119, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(115, 114, 99, 47, 100, 97, 116, 97),
-        ::capnp::word(115, 101, 116, 115, 47, 109, 107, 52),
-        ::capnp::word(56, 47, 109, 107, 52, 56, 46, 99),
-        ::capnp::word(97, 112, 110, 112, 58, 84, 101, 114),
-        ::capnp::word(114, 97, 105, 110, 85, 112, 100, 97),
-        ::capnp::word(116, 101, 46, 99, 104, 117, 110, 107),
-        ::capnp::word(73, 100, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(8, 0, 0, 0, 3, 0, 4, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 1, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(41, 0, 0, 0, 18, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(36, 0, 0, 0, 3, 0, 1, 0),
-        ::capnp::word(48, 0, 0, 0, 2, 0, 1, 0),
-        ::capnp::word(1, 0, 0, 0, 1, 0, 0, 0),
-        ::capnp::word(0, 0, 1, 0, 1, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(45, 0, 0, 0, 18, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(40, 0, 0, 0, 3, 0, 1, 0),
-        ::capnp::word(52, 0, 0, 0, 2, 0, 1, 0),
-        ::capnp::word(120, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(2, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(2, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(121, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(2, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(2, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ];
-      pub fn get_field_types(index: u16) -> ::capnp::introspect::Type {
-        match index {
-          0 => <i8 as ::capnp::introspect::Introspect>::introspect(),
-          1 => <i8 as ::capnp::introspect::Introspect>::introspect(),
-          _ => panic!("invalid field index {}", index),
-        }
-      }
-      pub fn get_annotation_types(child_index: Option<u16>, index: u32) -> ::capnp::introspect::Type {
-        panic!("invalid annotation indices ({:?}, {}) ", child_index, index)
-      }
-      pub static RAW_SCHEMA: ::capnp::introspect::RawStructSchema = ::capnp::introspect::RawStructSchema {
-        encoded_node: &ENCODED_NODE,
-        nonunion_members: NONUNION_MEMBERS,
-        members_by_discriminant: MEMBERS_BY_DISCRIMINANT,
-      };
-      pub static NONUNION_MEMBERS : &[u16] = &[0,1];
-      pub static MEMBERS_BY_DISCRIMINANT : &[u16] = &[];
       pub const TYPE_ID: u64 = 0xa85b_f3b5_3fbc_321c;
     }
   }
@@ -2284,7 +1370,6 @@ pub mod terrain_update {
 pub mod update {
   #[derive(Copy, Clone)]
   pub struct Owned(());
-  impl ::capnp::introspect::Introspect for Owned { fn introspect() -> ::capnp::introspect::Type { ::capnp::introspect::TypeVariant::Struct(::capnp::introspect::RawBrandedStructSchema { generic: &_private::RAW_SCHEMA, field_types: _private::get_field_types, annotation_types: _private::get_annotation_types }).into() } }
   impl ::capnp::traits::Owned for Owned { type Reader<'a> = Reader<'a>; type Builder<'a> = Builder<'a>; }
   impl ::capnp::traits::OwnedStruct for Owned { type Reader<'a> = Reader<'a>; type Builder<'a> = Builder<'a>; }
   impl ::capnp::traits::Pipelined for Owned { type Pipeline = Pipeline; }
@@ -2301,18 +1386,6 @@ pub mod update {
   impl <'a,> ::core::convert::From<::capnp::private::layout::StructReader<'a>> for Reader<'a,>  {
     fn from(reader: ::capnp::private::layout::StructReader<'a>) -> Self {
       Self { reader,  }
-    }
-  }
-
-  impl <'a,> ::core::convert::From<Reader<'a,>> for ::capnp::dynamic_value::Reader<'a>  {
-    fn from(reader: Reader<'a,>) -> Self {
-      Self::Struct(::capnp::dynamic_struct::Reader::new(reader.reader, ::capnp::schema::StructSchema::new(::capnp::introspect::RawBrandedStructSchema { generic: &_private::RAW_SCHEMA, field_types: _private::get_field_types::<>, annotation_types: _private::get_annotation_types::<>})))
-    }
-  }
-
-  impl <'a,> ::core::fmt::Debug for Reader<'a,>  {
-    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::result::Result<(), ::core::fmt::Error> {
-      core::fmt::Debug::fmt(&::core::convert::Into::<::capnp::dynamic_value::Reader<'_>>::into(*self), f)
     }
   }
 
@@ -2378,12 +1451,6 @@ pub mod update {
   impl <'a,> ::core::convert::From<::capnp::private::layout::StructBuilder<'a>> for Builder<'a,>  {
     fn from(builder: ::capnp::private::layout::StructBuilder<'a>) -> Self {
       Self { builder,  }
-    }
-  }
-
-  impl <'a,> ::core::convert::From<Builder<'a,>> for ::capnp::dynamic_value::Builder<'a>  {
-    fn from(builder: Builder<'a,>) -> Self {
-      Self::Struct(::capnp::dynamic_struct::Builder::new(builder.builder, ::capnp::schema::StructSchema::new(::capnp::introspect::RawBrandedStructSchema { generic: &_private::RAW_SCHEMA, field_types: _private::get_field_types::<>, annotation_types: _private::get_annotation_types::<>})))
     }
   }
 
@@ -2479,117 +1546,6 @@ pub mod update {
   impl Pipeline  {
   }
   mod _private {
-    pub static ENCODED_NODE: [::capnp::Word; 90] = [
-      ::capnp::word(0, 0, 0, 0, 5, 0, 6, 0),
-      ::capnp::word(51, 10, 38, 131, 29, 69, 250, 251),
-      ::capnp::word(29, 0, 0, 0, 1, 0, 1, 0),
-      ::capnp::word(176, 174, 139, 250, 136, 40, 24, 195),
-      ::capnp::word(2, 0, 7, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(21, 0, 0, 0, 34, 1, 0, 0),
-      ::capnp::word(37, 0, 0, 0, 7, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(33, 0, 0, 0, 231, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(115, 114, 99, 47, 100, 97, 116, 97),
-      ::capnp::word(115, 101, 116, 115, 47, 109, 107, 52),
-      ::capnp::word(56, 47, 109, 107, 52, 56, 46, 99),
-      ::capnp::word(97, 112, 110, 112, 58, 85, 112, 100),
-      ::capnp::word(97, 116, 101, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 1, 0, 1, 0),
-      ::capnp::word(16, 0, 0, 0, 3, 0, 4, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 1, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(97, 0, 0, 0, 74, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(96, 0, 0, 0, 3, 0, 1, 0),
-      ::capnp::word(124, 0, 0, 0, 2, 0, 1, 0),
-      ::capnp::word(1, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 1, 0, 1, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(121, 0, 0, 0, 50, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(116, 0, 0, 0, 3, 0, 1, 0),
-      ::capnp::word(128, 0, 0, 0, 2, 0, 1, 0),
-      ::capnp::word(2, 0, 0, 0, 1, 0, 0, 0),
-      ::capnp::word(0, 0, 1, 0, 2, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(125, 0, 0, 0, 98, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(124, 0, 0, 0, 3, 0, 1, 0),
-      ::capnp::word(136, 0, 0, 0, 2, 0, 1, 0),
-      ::capnp::word(3, 0, 0, 0, 1, 0, 0, 0),
-      ::capnp::word(0, 0, 1, 0, 3, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(133, 0, 0, 0, 122, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(132, 0, 0, 0, 3, 0, 1, 0),
-      ::capnp::word(160, 0, 0, 0, 2, 0, 1, 0),
-      ::capnp::word(99, 111, 110, 116, 97, 99, 116, 115),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(14, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 3, 0, 1, 0),
-      ::capnp::word(16, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(33, 56, 172, 91, 209, 134, 106, 130),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(14, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(115, 99, 111, 114, 101, 0, 0, 0),
-      ::capnp::word(8, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(8, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(119, 111, 114, 108, 100, 82, 97, 100),
-      ::capnp::word(105, 117, 115, 0, 0, 0, 0, 0),
-      ::capnp::word(10, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(10, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(116, 101, 114, 114, 97, 105, 110, 85),
-      ::capnp::word(112, 100, 97, 116, 101, 115, 0, 0),
-      ::capnp::word(14, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 3, 0, 1, 0),
-      ::capnp::word(16, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(60, 102, 209, 233, 247, 217, 142, 197),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(14, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-    ];
-    pub fn get_field_types(index: u16) -> ::capnp::introspect::Type {
-      match index {
-        0 => <::capnp::struct_list::Owned<crate::datasets::mk48::mk48_capnp::contact::Owned> as ::capnp::introspect::Introspect>::introspect(),
-        1 => <u32 as ::capnp::introspect::Introspect>::introspect(),
-        2 => <f32 as ::capnp::introspect::Introspect>::introspect(),
-        3 => <::capnp::struct_list::Owned<crate::datasets::mk48::mk48_capnp::terrain_update::Owned> as ::capnp::introspect::Introspect>::introspect(),
-        _ => panic!("invalid field index {}", index),
-      }
-    }
-    pub fn get_annotation_types(child_index: Option<u16>, index: u32) -> ::capnp::introspect::Type {
-      panic!("invalid annotation indices ({:?}, {}) ", child_index, index)
-    }
-    pub static RAW_SCHEMA: ::capnp::introspect::RawStructSchema = ::capnp::introspect::RawStructSchema {
-      encoded_node: &ENCODED_NODE,
-      nonunion_members: NONUNION_MEMBERS,
-      members_by_discriminant: MEMBERS_BY_DISCRIMINANT,
-    };
-    pub static NONUNION_MEMBERS : &[u16] = &[0,1,2,3];
-    pub static MEMBERS_BY_DISCRIMINANT : &[u16] = &[];
     pub const TYPE_ID: u64 = 0xfbfa_451d_8326_0a33;
   }
 }
@@ -2597,7 +1553,6 @@ pub mod update {
 pub mod updates {
   #[derive(Copy, Clone)]
   pub struct Owned(());
-  impl ::capnp::introspect::Introspect for Owned { fn introspect() -> ::capnp::introspect::Type { ::capnp::introspect::TypeVariant::Struct(::capnp::introspect::RawBrandedStructSchema { generic: &_private::RAW_SCHEMA, field_types: _private::get_field_types, annotation_types: _private::get_annotation_types }).into() } }
   impl ::capnp::traits::Owned for Owned { type Reader<'a> = Reader<'a>; type Builder<'a> = Builder<'a>; }
   impl ::capnp::traits::OwnedStruct for Owned { type Reader<'a> = Reader<'a>; type Builder<'a> = Builder<'a>; }
   impl ::capnp::traits::Pipelined for Owned { type Pipeline = Pipeline; }
@@ -2614,18 +1569,6 @@ pub mod updates {
   impl <'a,> ::core::convert::From<::capnp::private::layout::StructReader<'a>> for Reader<'a,>  {
     fn from(reader: ::capnp::private::layout::StructReader<'a>) -> Self {
       Self { reader,  }
-    }
-  }
-
-  impl <'a,> ::core::convert::From<Reader<'a,>> for ::capnp::dynamic_value::Reader<'a>  {
-    fn from(reader: Reader<'a,>) -> Self {
-      Self::Struct(::capnp::dynamic_struct::Reader::new(reader.reader, ::capnp::schema::StructSchema::new(::capnp::introspect::RawBrandedStructSchema { generic: &_private::RAW_SCHEMA, field_types: _private::get_field_types::<>, annotation_types: _private::get_annotation_types::<>})))
-    }
-  }
-
-  impl <'a,> ::core::fmt::Debug for Reader<'a,>  {
-    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::result::Result<(), ::core::fmt::Error> {
-      core::fmt::Debug::fmt(&::core::convert::Into::<::capnp::dynamic_value::Reader<'_>>::into(*self), f)
     }
   }
 
@@ -2675,12 +1618,6 @@ pub mod updates {
   impl <'a,> ::core::convert::From<::capnp::private::layout::StructBuilder<'a>> for Builder<'a,>  {
     fn from(builder: ::capnp::private::layout::StructBuilder<'a>) -> Self {
       Self { builder,  }
-    }
-  }
-
-  impl <'a,> ::core::convert::From<Builder<'a,>> for ::capnp::dynamic_value::Builder<'a>  {
-    fn from(builder: Builder<'a,>) -> Self {
-      Self::Struct(::capnp::dynamic_struct::Builder::new(builder.builder, ::capnp::schema::StructSchema::new(::capnp::introspect::RawBrandedStructSchema { generic: &_private::RAW_SCHEMA, field_types: _private::get_field_types::<>, annotation_types: _private::get_annotation_types::<>})))
     }
   }
 
@@ -2744,62 +1681,6 @@ pub mod updates {
   impl Pipeline  {
   }
   mod _private {
-    pub static ENCODED_NODE: [::capnp::Word; 38] = [
-      ::capnp::word(0, 0, 0, 0, 5, 0, 6, 0),
-      ::capnp::word(211, 99, 94, 251, 103, 12, 69, 250),
-      ::capnp::word(29, 0, 0, 0, 1, 0, 0, 0),
-      ::capnp::word(176, 174, 139, 250, 136, 40, 24, 195),
-      ::capnp::word(1, 0, 7, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(21, 0, 0, 0, 42, 1, 0, 0),
-      ::capnp::word(37, 0, 0, 0, 7, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(33, 0, 0, 0, 63, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(115, 114, 99, 47, 100, 97, 116, 97),
-      ::capnp::word(115, 101, 116, 115, 47, 109, 107, 52),
-      ::capnp::word(56, 47, 109, 107, 52, 56, 46, 99),
-      ::capnp::word(97, 112, 110, 112, 58, 85, 112, 100),
-      ::capnp::word(97, 116, 101, 115, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 1, 0, 1, 0),
-      ::capnp::word(4, 0, 0, 0, 3, 0, 4, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 1, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(13, 0, 0, 0, 66, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(8, 0, 0, 0, 3, 0, 1, 0),
-      ::capnp::word(36, 0, 0, 0, 2, 0, 1, 0),
-      ::capnp::word(117, 112, 100, 97, 116, 101, 115, 0),
-      ::capnp::word(14, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 3, 0, 1, 0),
-      ::capnp::word(16, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(51, 10, 38, 131, 29, 69, 250, 251),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(14, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-      ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-    ];
-    pub fn get_field_types(index: u16) -> ::capnp::introspect::Type {
-      match index {
-        0 => <::capnp::struct_list::Owned<crate::datasets::mk48::mk48_capnp::update::Owned> as ::capnp::introspect::Introspect>::introspect(),
-        _ => panic!("invalid field index {}", index),
-      }
-    }
-    pub fn get_annotation_types(child_index: Option<u16>, index: u32) -> ::capnp::introspect::Type {
-      panic!("invalid annotation indices ({:?}, {}) ", child_index, index)
-    }
-    pub static RAW_SCHEMA: ::capnp::introspect::RawStructSchema = ::capnp::introspect::RawStructSchema {
-      encoded_node: &ENCODED_NODE,
-      nonunion_members: NONUNION_MEMBERS,
-      members_by_discriminant: MEMBERS_BY_DISCRIMINANT,
-    };
-    pub static NONUNION_MEMBERS : &[u16] = &[0];
-    pub static MEMBERS_BY_DISCRIMINANT : &[u16] = &[];
     pub const TYPE_ID: u64 = 0xfa45_0c67_fb5e_63d3;
   }
 }

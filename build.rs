@@ -58,6 +58,25 @@ fn prost_compile_dataset(name: &'static str) -> std::io::Result<()> {
     )
 }
 
+#[cfg(feature = "protokit_build")]
+fn protokit_compile_dataset(name: &'static str) -> std::io::Result<()> {
+    if cfg!(windows) {
+        match env::var("PROTOC") {
+            Err(_) => {
+                env::set_var("PROTOC", "./prebuilt/protoc.exe");
+            }
+            _ => {}
+        }
+    }
+    let build = protokit_build::Build::new();
+    Ok(build.include("src")
+        .out_dir(format!("src/datasets/{name}/pk"))
+        .compile(format!("./src/datasets/{0}/{0}.proto", name))
+        .unwrap()
+        .generate()
+        .unwrap())
+}
+
 fn main() {
     const DATASETS: &[&str] = &["log", "mesh", "minecraft_savedata", "mk48"];
     for &name in DATASETS.iter() {
@@ -66,5 +85,7 @@ fn main() {
         flatc_compile_dataset(name).unwrap();
         #[cfg(feature = "prost-build")]
         prost_compile_dataset(name).unwrap();
+        #[cfg(feature = "protokit_build")]
+        protokit_compile_dataset(name).unwrap();
     }
 }

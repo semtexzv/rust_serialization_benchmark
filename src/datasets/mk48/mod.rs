@@ -10,7 +10,8 @@ pub mod mk48_fb;
 pub mod mk48_prost {
     include!(concat!(env!("OUT_DIR"), "/prost.mk48.rs"));
 }
-
+#[cfg(feature = "protokit")]
+pub mod pk;
 #[cfg(feature = "flatbuffers")]
 use flatbuffers::{FlatBufferBuilder, WIPOffset};
 #[cfg(feature = "capnp")]
@@ -33,15 +34,13 @@ use crate::bench_flatbuffers;
 use crate::bench_prost;
 use crate::{generate_vec, Generate};
 
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+#[derive(Copy, Clone, Debug)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
-#[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
     feature = "borsh",
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
-#[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
     feature = "rkyv",
@@ -63,15 +62,25 @@ use crate::{generate_vec, Generate};
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 #[repr(u8)]
 pub enum EntityType {
+    #[cfg_attr(feature = "bitcode", bitcode_hint(frequency = 2.14))]
     ArleighBurke,
+    #[cfg_attr(feature = "bitcode", bitcode_hint(frequency = 0.52))]
     Bismarck,
+    #[cfg_attr(feature = "bitcode", bitcode_hint(frequency = 0.97))]
     Clemenceau,
+    #[cfg_attr(feature = "bitcode", bitcode_hint(frequency = 1.46))]
     Fletcher,
+    #[cfg_attr(feature = "bitcode", bitcode_hint(frequency = 13.16))]
     G5,
+    #[cfg_attr(feature = "bitcode", bitcode_hint(frequency = 1.55))]
     Iowa,
+    #[cfg_attr(feature = "bitcode", bitcode_hint(frequency = 0.83))]
     Kolkata,
+    #[cfg_attr(feature = "bitcode", bitcode_hint(frequency = 7.25))]
     Osa,
+    #[cfg_attr(feature = "bitcode", bitcode_hint(frequency = 4.06))]
     Yasen,
+    #[cfg_attr(feature = "bitcode", bitcode_hint(frequency = 12.92))]
     Zubr,
 }
 
@@ -210,24 +219,6 @@ impl Into<pb::EntityType> for EntityType {
     }
 }
 
-#[cfg(feature = "prost")]
-impl From<pb::EntityType> for EntityType {
-    fn from(value: pb::EntityType) -> Self {
-        match value {
-            pb::EntityType::ArleighBurke => EntityType::ArleighBurke,
-            pb::EntityType::Bismarck => EntityType::Bismarck,
-            pb::EntityType::Clemenceau => EntityType::Clemenceau,
-            pb::EntityType::Fletcher => EntityType::Fletcher,
-            pb::EntityType::G5 => EntityType::G5,
-            pb::EntityType::Iowa => EntityType::Iowa,
-            pb::EntityType::Kolkata => EntityType::Kolkata,
-            pb::EntityType::Osa => EntityType::Osa,
-            pb::EntityType::Yasen => EntityType::Yasen,
-            pb::EntityType::Zubr => EntityType::Zubr,
-        }
-    }
-}
-
 #[cfg(feature = "alkahest")]
 impl alkahest::Pack<EntityType> for EntityType {
     #[inline]
@@ -273,15 +264,13 @@ fn generate_velocity(rng: &mut impl Rng) -> i16 {
     }
 }
 
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
-#[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
     feature = "borsh",
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
-#[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
     feature = "rkyv",
@@ -302,6 +291,7 @@ fn generate_velocity(rng: &mut impl Rng) -> i16 {
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 pub struct Transform {
+    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0..1"))]
     pub altitude: i8,
     pub angle: u16,
     pub position: (f32, f32),
@@ -368,25 +358,6 @@ impl bench_prost::Serialize for Transform {
     }
 }
 
-#[cfg(feature = "prost")]
-impl From<pb::Vector2f> for (f32, f32) {
-    fn from(value: pb::Vector2f) -> Self {
-        (value.x, value.y)
-    }
-}
-
-#[cfg(feature = "prost")]
-impl From<pb::Transform> for Transform {
-    fn from(value: pb::Transform) -> Self {
-        Transform {
-            altitude: value.altitude.try_into().unwrap(),
-            angle: value.angle.try_into().unwrap(),
-            position: value.position.unwrap().into(),
-            velocity: value.velocity.try_into().unwrap(),
-        }
-    }
-}
-
 #[cfg(feature = "alkahest")]
 impl alkahest::Pack<Transform> for Transform {
     #[inline]
@@ -401,15 +372,13 @@ impl alkahest::Pack<Transform> for Transform {
     }
 }
 
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
-#[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
     feature = "borsh",
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
-#[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
     feature = "rkyv",
@@ -480,17 +449,6 @@ impl bench_prost::Serialize for Guidance {
     }
 }
 
-#[cfg(feature = "prost")]
-impl From<pb::Guidance> for Guidance {
-    fn from(value: pb::Guidance) -> Self {
-        Guidance {
-            angle: value.angle.try_into().unwrap(),
-            submerge: value.submerge,
-            velocity: value.velocity.try_into().unwrap(),
-        }
-    }
-}
-
 #[cfg(feature = "alkahest")]
 impl alkahest::Pack<Guidance> for Guidance {
     #[inline]
@@ -504,15 +462,13 @@ impl alkahest::Pack<Guidance> for Guidance {
     }
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
-#[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
     feature = "borsh",
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
-#[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
     feature = "rkyv",
@@ -532,10 +488,13 @@ impl alkahest::Pack<Guidance> for Guidance {
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 pub struct Contact {
+    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0..1"))]
     pub damage: u8,
+    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0..8000"))]
     pub entity_id: u32,
     pub entity_type: Option<EntityType>,
     pub guidance: Guidance,
+    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0..400"))]
     pub player_id: Option<u16>,
     pub reloads: Vec<bool>,
     pub transform: Transform,
@@ -676,28 +635,6 @@ impl bench_prost::Serialize for Contact {
     }
 }
 
-#[cfg(feature = "prost")]
-impl From<pb::Contact> for Contact {
-    fn from(value: pb::Contact) -> Self {
-        Contact {
-            damage: value.damage.try_into().unwrap(),
-            entity_id: value.entity_id,
-            entity_type: value
-                .entity_type
-                .map(|et| <pb::EntityType>::try_from(et).unwrap().into()),
-            guidance: value.guidance.unwrap().into(),
-            player_id: value.player_id.map(|id| id.try_into().unwrap()),
-            reloads: value.reloads,
-            transform: value.transform.unwrap().into(),
-            turret_angles: value
-                .turret_angles
-                .into_iter()
-                .map(|a| a.try_into().unwrap())
-                .collect(),
-        }
-    }
-}
-
 #[cfg(feature = "alkahest")]
 #[derive(alkahest::Schema)]
 pub struct ContactSchema {
@@ -729,15 +666,13 @@ impl alkahest::Pack<ContactSchema> for &'_ Contact {
     }
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
-#[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
     feature = "borsh",
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
-#[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
     feature = "rkyv",
@@ -757,6 +692,7 @@ impl alkahest::Pack<ContactSchema> for &'_ Contact {
 #[cfg_attr(feature = "savefile", derive(savefile_derive::Savefile))]
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 pub struct TerrainUpdate {
+    #[cfg_attr(feature = "bitcode", bitcode_hint(gamma))]
     chunk_id: (i8, i8),
     data: Vec<u8>,
 }
@@ -829,23 +765,6 @@ impl bench_prost::Serialize for TerrainUpdate {
     }
 }
 
-#[cfg(feature = "prost")]
-impl From<pb::ChunkId> for (i8, i8) {
-    fn from(value: pb::ChunkId) -> Self {
-        (value.x.try_into().unwrap(), value.y.try_into().unwrap())
-    }
-}
-
-#[cfg(feature = "prost")]
-impl From<pb::TerrainUpdate> for TerrainUpdate {
-    fn from(value: pb::TerrainUpdate) -> Self {
-        TerrainUpdate {
-            chunk_id: value.chunk_id.unwrap().into(),
-            data: value.data,
-        }
-    }
-}
-
 #[cfg(feature = "alkahest")]
 #[derive(alkahest::Schema)]
 pub struct TerrainUpdateSchema {
@@ -869,15 +788,13 @@ impl alkahest::Pack<TerrainUpdateSchema> for &'_ TerrainUpdate {
     }
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
-#[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
     feature = "borsh",
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
-#[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
     feature = "rkyv",
@@ -898,6 +815,7 @@ impl alkahest::Pack<TerrainUpdateSchema> for &'_ TerrainUpdate {
 #[cfg_attr(feature = "nanoserde", derive(nanoserde::SerBin, nanoserde::DeBin))]
 pub struct Update {
     pub contacts: Vec<Contact>,
+    #[cfg_attr(feature = "bitcode", bitcode_hint(expected_range = "0..5000"))]
     pub score: u32,
     pub world_radius: f32,
     pub terrain_updates: Vec<TerrainUpdate>,
@@ -1002,18 +920,6 @@ impl bench_prost::Serialize for Update {
     }
 }
 
-#[cfg(feature = "prost")]
-impl From<pb::Update> for Update {
-    fn from(value: pb::Update) -> Self {
-        Update {
-            contacts: value.contacts.into_iter().map(Into::into).collect(),
-            score: value.score,
-            world_radius: value.world_radius,
-            terrain_updates: value.terrain_updates.into_iter().map(Into::into).collect(),
-        }
-    }
-}
-
 #[cfg(feature = "alkahest")]
 #[derive(alkahest::Schema)]
 pub struct UpdateSchema {
@@ -1037,15 +943,13 @@ impl alkahest::Pack<UpdateSchema> for &'_ Update {
     }
 }
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone)]
 #[cfg_attr(feature = "abomonation", derive(abomonation_derive::Abomonation))]
-#[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
 #[cfg_attr(
     feature = "borsh",
     derive(borsh::BorshSerialize, borsh::BorshDeserialize)
 )]
-#[cfg_attr(feature = "databuf", derive(databuf::Encode, databuf::Decode))]
 #[cfg_attr(feature = "msgpacker", derive(msgpacker::MsgPacker))]
 #[cfg_attr(
     feature = "rkyv",
@@ -1125,15 +1029,6 @@ impl bench_prost::Serialize for Updates {
             result.updates.push(update.serialize_pb());
         }
         result
-    }
-}
-
-#[cfg(feature = "prost")]
-impl From<pb::Updates> for Updates {
-    fn from(value: pb::Updates) -> Self {
-        Updates {
-            updates: value.updates.into_iter().map(Into::into).collect(),
-        }
     }
 }
 
